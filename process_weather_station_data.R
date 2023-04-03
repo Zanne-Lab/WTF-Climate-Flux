@@ -43,13 +43,11 @@ ws_files <- drive_ls("WTFProject/data/weather_stations/Met_data_Current",
                      recursive = TRUE, pattern = ".dat|.csv")
 
 # Download files from drive 
-dowload_ws_file <- function(x) {
-  if(!file.exists(sprintf("data/weather_stations/%s",x))){
-    drive_download(x,path = sprintf("data/weather_stations/%s",x))
-  } else {    message(paste0("File ", x," exists"))    }
-  
+for(x in 1:length(ws_files$id)){
+  if(!file.exists(sprintf("data/weather_stations/%s",ws_files$name[x]))){
+    drive_download(ws_files$id[x],path = sprintf("data/weather_stations/%s",ws_files$name[x]))
+  } else {    message(paste0("File ", ws_files$name[x]," exist"))    }
 }
-invisible(sapply(ws_files$name, dowload_ws_file, simplify = TRUE))
 
 # Get files names for ibutton data from Google Drive
 ib_files <- drive_ls("WTFProject/data/i_buttons", recursive = TRUE, pattern= ".txt")
