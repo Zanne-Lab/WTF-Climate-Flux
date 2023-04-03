@@ -524,13 +524,13 @@ ggplot(mutate(ib_dat2,outlier=ifelse(ib_AirTC < 4 | ib_AirTC > 50,"Yes","No")),
        aes(date,ib_AirTC,color=outlier)) + geom_point(alpha=0.5,size=0.5) + facet_wrap(site~.)
 
 # View cleaned data
-ggplot(ib_dat3, aes(date,ib_AirTC_mean)) + geom_point(alpha=0.5,size=0.5,color="blue") + 
+ggplot(ib_dat3, aes(date,ib_AirTC_mean)) + geom_point(alpha=0.5,size=0.5) + 
   facet_wrap(site~.)
 #write_csv(ib_dat3,"data/processed/weather_stations/ib_30min_raw.csv")
 
 # Merge with main dataframe
 wthr2 <- left_join(wthr, ib_dat3, by=c("site","date"))
-# write_csv(wthr2,"data/processed/weather_stations/wthr_ib_clean.csv")
+#write_csv(wthr2,"data/processed/weather_stations/wthr_ib_clean.csv")
 
 
 
