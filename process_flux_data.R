@@ -286,8 +286,8 @@ weights_all3 <- weights_all2 %>%
 
 ########## Get pressure data from climate dataset ##########
 
-# Read in cliamte dataset and select relevent columns
-wthr_BP <- read_csv("data/processed/weather_stations/wthr_1hr_final.csv") %>%
+# Read in climate dataset and select relevant columns
+wthr_BP <- read_csv("data/processed/weather_stations/wthr_1hr_FMC.csv") %>%
   select(site, date, BP_mbar_Avg) %>% 
   mutate(date = ymd_hms(date)) %>%
   arrange(site,date) %>%
@@ -378,19 +378,11 @@ resp_out <- resp_all %>%
 # Save data
 write_csv(resp_out,"data/processed/wood_respiration/wood_respiration_rates.csv")
 
-# Write just pine data
-filter(resp_out, Species.Code == "PIRA") %>% 
-  write_csv(file = "data/processed/wood_respiration/pine_resp.csv")
-
-# Write just natives data
-filter(resp_out, Species.Code != "PIRA") %>% 
-  write_csv(file = "data/processed/wood_respiration/native_resp.csv")
-
 
 
 ########## Additional processing of pine and natives for climate-flux model ##########
 
-# Select pine blocks from pine gradient experiment
+# Select pine blocks from pine gradient experiment and natives
 resp_CF <- resp_out %>%
   filter(site%in%c("DRO","MLRF","MLES","STCK","PNW")) %>%
   filter(!SampleID%in%c("91-15","91-25","91-35","374-block","288-25","251-25","251-35"))
