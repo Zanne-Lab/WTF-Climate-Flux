@@ -8,13 +8,14 @@ library(forcats)
 library(zoo)
 
 ########## Load in data ##########
-wthr_FMC <- read_csv("data/processed/weather_stations/wthr_1hr_FMC.csv") %>%
+wthr_FMC <- read_csv("weather-flux/data/processed/weather_stations/wthr_1hr_FMC.csv") %>%
   filter(site!="HQ_AWC")
-SILO <- read_csv("data/external_data/SILO_processed.csv") %>%
+SILO <- read_csv("weather-flux/data/external_data/SILO_processed.csv") %>%
   filter(site!="HQ_AWC")
-pine_flux <- read_csv("data/processed/wood_respiration/pine_CO2_clean.csv") %>%
+pine_flux <- read_csv("weather-flux/data/processed/wood_respiration/pine_CO2_clean.csv") %>%
   filter(CO2_resp_rate > 0)
-native_flux <- read_csv("data/processed/wood_respiration/native_CO2_clean.csv")
+native_flux <- read_csv("weather-flux/data/processed/wood_respiration/native_CO2_clean.csv")
+bm_fits <- read_csv("data/processed/bm_fits.csv")
 # HQ_AWC is removed from plotting as it was not used in analysis
 
 # SILO historical dataset
@@ -228,34 +229,6 @@ dev.off()
 
 #..Main #### 
 #......Bayesian model ####
-library(brms)
-library(tidybayes)
-
-# Bayesian model 1
-m1 <- brm(CO2_resp_rate ~ FMC + (1|site),data = pine_flux,iter = 5000,family="beta")
-summary(m1)
-m1$fit
-
-# Posterior predictive check
-pp_check(m1,ndraws=100)
-
-# Check MCMC chain
-plot(m1)
-
-# Information criteria
-loo_m1 = loo(m1)
-
-# Assessing uncertainty
-conditional_effects(m1,"FMC")
-conditional_effects(m1,"FMC",spaghetti=T,ndraws=500)
-m_fit = conditional_effects(m1,"FMC")
-
-conditions <- data.frame(site = unique(pine_flux$site))
-rownames(conditions) <- unique(pine_flux$site)
-me_fit <- conditional_effects(m1, conditions = conditions,
-                              re_formula = NULL, method = "predict")
-bm_fits <- me_fit[[1]]
-
 bm <- ggplot() + 
   geom_smooth(bm_fits,mapping=aes(effect1__,estimate__,color=site)) + 
   scale_color_manual(name="Site",values=site_palette) +
@@ -293,6 +266,7 @@ ggplot() +
              alpha=0.85) +
   scale_color_manual(name="Species",values=all_DRO_palette) +
   xlab("FMC (%)") + ylab("CO2 Flux (ug CO2/s/g)") + 
+  xlim(0,650) + ylim(-0.001,0.125) +
   theme_bw() +
   theme(panel.grid.major = element_blank())
 
@@ -306,6 +280,7 @@ ggplot() +
              alpha=0.85) +
   scale_color_manual(name="Species",values=all_PNW_palette) +
   xlab("FMC (%)") + ylab("CO2 Flux (ug CO2/s/g)") + 
+  xlim(0,650) + ylim(-0.001,0.125) +
   theme_bw() +
   theme(panel.grid.major = element_blank())
 
