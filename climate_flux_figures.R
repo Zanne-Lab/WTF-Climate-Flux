@@ -1,6 +1,7 @@
 # Create figures for climate/flux paper
 
-# Load packages
+# Load packages and set working directory
+setwd("WTF-Climate-Flux")
 library(tidyverse)
 library(lubridate)
 library(ggh4x)
@@ -15,7 +16,11 @@ SILO <- read_csv("weather-flux/data/external_data/SILO_processed.csv") %>%
 pine_flux <- read_csv("weather-flux/data/processed/wood_respiration/pine_CO2_clean.csv") %>%
   filter(CO2_resp_rate > 0)
 native_flux <- read_csv("weather-flux/data/processed/wood_respiration/native_CO2_clean.csv")
-bm_fits <- read_csv("data/processed/bm_fits.csv")
+bm_fits <- read_csv("weather-flux/data/processed/bm_fits.csv")
+time_flux <- read.table("FMC_mechanistic_model/pred.2_2000.txt",
+                        sep=",",skip=1)
+names(time_flux) <- read.table("FMC_mechanistic_model/pred.2_2000.txt",
+                               sep=",",nrows=1)
 # HQ_AWC is removed from plotting as it was not used in analysis
 
 # SILO historical dataset
@@ -37,7 +42,7 @@ SILO_hist <- SILO %>%
             hist_AirTC_min = min(an_AirTC_min)) %>%
   ungroup()
 
-# Set color palettes
+# Set color palettes and common aesthetics
 library(palettetown)
 site_palette <- pokepal(254,5)
 site_palette_a <- c("#98D048","#386020","#C08038","#F8E068","#D05038")
@@ -58,6 +63,11 @@ all_sp_palette <- c("#7090A0","#F8C050","#486878","#603000","#A07030","#D0A060",
                     "#D8C088","#F8E0A8","#B09860","#686868","#E84800","#F87000",
                     "#685820","#700A1F","#103058","#805010","#D8D8D0")
 
+# Common aesthetics
+fig_aes <- theme_bw() +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        strip.background =element_rect(fill="gray95"))
 
 ########## Weather figures ##########
 
@@ -71,8 +81,7 @@ ggplot(wthr_FMC) +
   xlab(label = "Date") + 
   scale_y_continuous(name="Air Temperature (C)",
                      sec.axis=sec_axis(~.,name="Rainfall (mm/hr)")) +
-  theme_bw() +
-  theme(panel.grid.major = element_blank())
+  fig_aes
 
 
 #..Supplement #### 
@@ -140,9 +149,8 @@ ggplot() +
   scale_color_manual(name="Rainfall source",values =c("maroon","ivory4"),
                      labels=c("CHRS CCS", "WTF Stations")) + 
   facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) + 
-  xlab("Month") + ylab("Rainfall (mm/month)") + 
-  theme_bw() +
-  theme(panel.grid.major = element_blank())
+  xlab("Month") + ylab("Rainfall (mm/month)") +
+  fig_aes
 
 
 #......Gap-filled weather data ####
@@ -151,16 +159,14 @@ ggplot(wthr_FMC,aes(date,AirTC_Avg,color=AirTC_source)) +
   geom_point(alpha=0.3,size=0.3) + 
   scale_color_manual(values=c("slateblue1","ivory4")) + 
   xlab("Date") + ylab("Air temperature (C)") +
-  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) + 
-  theme_bw() +
-  theme(panel.grid.major = element_blank())
+  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) +
+  fig_aes
 ggplot(wthr_FMC,aes(date,ib_AirTC_Avg,color=ib_source)) + 
   geom_point(alpha=0.3,size=0.3) + 
   scale_color_manual(values=c("gray35","ivory4")) +
   xlab("Date") + ylab("ibutton Air temperature (C)") +
-  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) + 
-  theme_bw() +
-  theme(panel.grid.major = element_blank())
+  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) +
+  fig_aes
 ggplot() + 
   geom_point(data=wthr_FMC,
              aes(date,Rain_mm_Tot,color=Rain_source),alpha=0.3,size=0.3) + 
@@ -168,59 +174,50 @@ ggplot() +
   geom_point(data=filter(wthr_FMC,Rain_source=="NASA_POWER"),
              aes(date,Rain_mm_Tot),alpha=0.3,size=0.3,color="slateblue1") +
   xlab("Date") + ylab("Rainfall (mm/hr)") +
-  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) + 
-  theme_bw() +
-  theme(panel.grid.major = element_blank())
+  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) +
+  fig_aes
 ggplot(wthr_FMC,aes(date,BP_mbar_Avg,color=BP_source)) + 
   geom_point(alpha=0.3,size=0.3) + 
   scale_color_manual(values=c("slateblue1","ivory4")) +
   xlab("Date") + ylab("Barometric pressure (mbar)") +
-  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) + 
-  theme_bw() +
-  theme(panel.grid.major = element_blank())
+  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) +
+  fig_aes
 ggplot(wthr_FMC,aes(date,RH_Avg,color=RH_source)) + 
   geom_point(alpha=0.3,size=0.3) + 
   scale_color_manual(values=c("slateblue1","ivory4")) +
   xlab("Date") + ylab("Relative humidity (%)") +
-  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) + 
-  theme_bw() +
-  theme(panel.grid.major = element_blank())
+  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) +
+  fig_aes
 ggplot(wthr_FMC,aes(date,WS2M)) + 
   geom_point(alpha=0.3,size=0.3,color="slateblue1") + 
   xlab("Date") + ylab("Wind speed (m/s)") +
-  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) + 
-  theme_bw() +
-  theme(panel.grid.major = element_blank())
+  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) +
+  fig_aes
 ggplot(wthr_FMC,aes(date,ALLSKY_SFC_SW_DWN)) + 
   geom_point(alpha=0.3,size=0.3,color="slateblue1") + 
   xlab("Date") + ylab("Shortwave radiation (W/m^2)") +
-  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) + 
-  theme_bw() +
-  theme(panel.grid.major = element_blank())
+  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) +
+  fig_aes
 ggplot(wthr_FMC,aes(date,ALLSKY_SFC_LW_DWN)) + 
   geom_point(alpha=0.3,size=0.3,color="slateblue1") + 
   xlab("Date") + ylab("Longwave radiation (W/m^2)") +
-  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) + 
-  theme_bw() +
-  theme(panel.grid.major = element_blank())
+  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) +
+  fig_aes
 ggplot(wthr_FMC,aes(date,solar_elevation)) + 
   geom_point(alpha=0.3,size=0.3,color="slateblue1") + 
   xlab("Date") + ylab("Solar elevation (degrees)") +
-  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) + 
-  theme_bw() +
-  theme(panel.grid.major = element_blank())
+  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) +
+  fig_aes
 ggplot(wthr_FMC,aes(date,solar_azimuth)) + 
   geom_point(alpha=0.3,size=0.3,color="gray35") + 
   xlab("Date") + ylab("Solar azimuth (degrees)") +
-  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) + 
-  theme_bw() +
-  theme(panel.grid.major = element_blank())
+  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) +
+  fig_aes
 ggplot(wthr_FMC,aes(date,FMC_norm)) + 
   geom_point(alpha=0.3,size=0.3,color="ivory4") + 
   xlab("Date") + ylab("Fuel moisture content, normalized (%)") +
-  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) + 
-  theme_bw() +
-  theme(panel.grid.major = element_blank())
+  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) +
+  fig_aes
 dev.off()
 
 
@@ -238,8 +235,7 @@ bm <- ggplot() +
   facet_wrap(~fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")) +
   scale_fill_manual(name="Site",values=site_palette) +
   xlab("FMC (%)") + ylab("CO2 Flux (ug CO2/s/g)") + 
-  theme_bw() +
-  theme(panel.grid.major = element_blank())
+  fig_aes
 
 # With pine points plotted on
 bm + geom_point(pine_flux,mapping=aes(FMC,CO2_resp_rate),
@@ -267,8 +263,7 @@ ggplot() +
   scale_color_manual(name="Species",values=all_DRO_palette) +
   xlab("FMC (%)") + ylab("CO2 Flux (ug CO2/s/g)") + 
   xlim(0,650) + ylim(-0.001,0.125) +
-  theme_bw() +
-  theme(panel.grid.major = element_blank())
+  fig_aes
 
 ggplot() + 
   geom_smooth(PNW_bm,mapping=aes(effect1__,estimate__),color="#D05038") + 
@@ -281,8 +276,7 @@ ggplot() +
   scale_color_manual(name="Species",values=all_PNW_palette) +
   xlab("FMC (%)") + ylab("CO2 Flux (ug CO2/s/g)") + 
   xlim(0,650) + ylim(-0.001,0.125) +
-  theme_bw() +
-  theme(panel.grid.major = element_blank())
+  fig_aes
 
 
 
@@ -292,9 +286,48 @@ ggplot(pine_flux,aes(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW"),
                      CO2_resp_rate,fill=site)) + 
   geom_boxplot() +
   scale_fill_manual(name="Site",values=site_palette) +
-  xlab("Site") + ylab("CO2 Flux (ug CO2/s/g)") + 
-  theme_bw()
+  xlab("Site") + ylab("CO2 Flux (ug CO2/s/g)") +
+  fig_aes
 
 
 
+########## Simulations figures ##########
+#..Main ####
+#......Time-resolved CO2 flux ####
+time_flux2 <- data.frame(site = wthr_FMC$site,
+                         date = wthr_FMC$date,
+                         Estimate = time_flux$Estimate,
+                         Est.Error = time_flux$Est.Error,
+                         Q2.5 = time_flux$Q2.5,
+                         Q97.5 = time_flux$Q97.5)
+
+#..........DRO and PNW only ####
+time_flux_DP <- filter(time_flux2,site%in%c("DRO","PNW"))
+
+ggplot(time_flux_DP) +
+  geom_line(mapping=aes(date,Estimate,color=site),alpha=0.5) +
+  geom_ribbon(mapping=aes(x=date,y=Estimate,ymin=Q2.5,ymax=Q97.5,
+                          fill=site),
+              alpha=0.2,color=NA) +
+  scale_color_manual(values=c("#98D048","#D05038")) +
+  scale_fill_manual(values=c("#98D048","#D05038")) +
+  xlab("Date") + ylab("CO2 Flux (ug CO2/s/g)") +
+  facet_grid(~site) +
+  fig_aes
+
+
+
+#..Supplement ####
+#......Time-resolved CO2 flux ####
+#..........All sites ####
+ggplot(time_flux2) +
+  geom_line(mapping=aes(date,Estimate,color=site),alpha=0.5) +
+  geom_ribbon(mapping=aes(x=date,y=Estimate,ymin=Q2.5,ymax=Q97.5,
+                          fill=site),
+              alpha=0.2,color=NA) +
+  scale_color_manual(values=site_palette) +
+  scale_fill_manual(values=site_palette) +
+  xlab("Date") + ylab("CO2 Flux (ug CO2/s/g)") +
+  facet_wrap(~fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")) +
+  fig_aes
 
