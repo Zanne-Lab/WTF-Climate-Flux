@@ -9,14 +9,14 @@ library(forcats)
 library(zoo)
 
 ########## Load in data ##########
-wthr_FMC <- read_csv("weather-flux/data/processed/weather_stations/wthr_1hr_FMC.csv") %>%
+wthr_FMC <- read_csv("weather_flux/data/processed/weather_stations/wthr_1hr_FMC.csv") %>%
   filter(site!="HQ_AWC")
-SILO <- read_csv("weather-flux/data/external_data/SILO_processed.csv") %>%
+SILO <- read_csv("weather_flux/data/external_data/SILO_processed.csv") %>%
   filter(site!="HQ_AWC")
-pine_flux <- read_csv("weather-flux/data/processed/wood_respiration/pine_CO2_clean.csv") %>%
+pine_flux <- read_csv("weather_flux/data/processed/wood_respiration/pine_CO2_clean.csv") %>%
   filter(CO2_resp_rate > 0)
-native_flux <- read_csv("weather-flux/data/processed/wood_respiration/native_CO2_clean.csv")
-bm_fits <- read_csv("weather-flux/data/processed/bm_fits.csv")
+native_flux <- read_csv("weather_flux/data/processed/wood_respiration/native_CO2_clean.csv")
+bm_fits <- read_csv("bayesian_model/bm_fits.csv")
 time_flux <- read.table("FMC_mechanistic_model/pred.2_2000.txt",
                         sep=",",skip=1)
 names(time_flux) <- read.table("FMC_mechanistic_model/pred.2_2000.txt",
