@@ -1,7 +1,7 @@
 # Create figures for climate/flux paper
 
 # Load packages and set working directory
-setwd("WTF-Climate-Flux")
+# setwd("WTF-Climate-Flux")
 library(tidyverse)
 library(lubridate)
 library(ggh4x)
@@ -17,10 +17,10 @@ pine_flux <- read_csv("weather_flux/data/processed/wood_respiration/pine_CO2_cle
   filter(CO2_resp_rate > 0)
 native_flux <- read_csv("weather_flux/data/processed/wood_respiration/native_CO2_clean.csv")
 bm_fits <- read_csv("bayesian_model/bm_fits.csv")
-time_flux <- read.table("FMC_mechanistic_model/pred.2_2000.txt",
-                        sep=",",skip=1)
-names(time_flux) <- read.table("FMC_mechanistic_model/pred.2_2000.txt",
-                               sep=",",nrows=1)
+FMC_sim <- read_csv("FMC_mechanistic_model/fuel_moisture_output_rf.csv")
+time_flux <- read_csv("bayesian_model/FMC_pred.csv") %>%
+  separate(1,into=c("Estimate","Est.Error","Q2.5","Q97.5"),sep=",") %>%
+  mutate_at(c("Estimate","Est.Error","Q2.5","Q97.5"),as.numeric)
 # HQ_AWC is removed from plotting as it was not used in analysis
 
 # SILO historical dataset
@@ -42,7 +42,7 @@ SILO_hist <- SILO %>%
             hist_AirTC_min = min(an_AirTC_min)) %>%
   ungroup()
 
-# Set color palettes and common aesthetics
+########## Set color palettes and common aesthetics ##########
 library(palettetown)
 site_palette <- pokepal(254,5)
 site_palette_a <- c("#98D048","#386020","#C08038","#F8E068","#D05038")
@@ -293,6 +293,22 @@ ggplot(pine_flux,aes(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW"),
 
 ########## Simulations figures ##########
 #..Main ####
+#......Calibration vs. Block simulation ####
+FMC_sim_p <- FMC_sim %>%
+  select(-FMC_nor) %>%
+  pivot_longer(!c(date,site),names_to="Substrate",values_to="FMC") %>%
+  mutate(Substrate = ifelse(Substrate=="fuel_stick","Calibration","Simulation"))
+
+ggplot(FMC_sim_p,aes(date,FMC,color=Substrate)) + 
+  geom_line(alpha=0.5) +
+  scale_color_manual(values=c("#40A0D8","#E3493D")) +
+  geom_line(data=FMC_sim,mapping=aes(date,fuel_block),
+            alpha=0.3,color="#E3493D") +
+  xlab("Date") + ylab("FMC (%)") +
+  facet_wrap(~fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")) +
+  fig_aes
+
+
 #......Time-resolved CO2 flux ####
 time_flux2 <- data.frame(site = wthr_FMC$site,
                          date = wthr_FMC$date,
@@ -313,6 +329,36 @@ ggplot(time_flux_DP) +
   scale_fill_manual(values=c("#98D048","#D05038")) +
   xlab("Date") + ylab("CO2 Flux (ug CO2/s/g)") +
   facet_grid(~site) +
+  fig_aes
+
+
+#......Block FMC vs. Flux + Natives ####
+sim_flux <- data.frame(site = FMC_sim$site,
+                       Block_FMC = FMC_sim$fuel_block,
+                       Sim_CO2 = time_flux$Estimate)
+
+# DRO
+ggplot() +
+  geom_point(data=filter(sim_flux,site=="DRO"),
+             mapping=aes(Block_FMC,Sim_CO2),
+             alpha=0.3,color="#98D048") +
+  geom_point(data=DRO_flux,
+             mapping=aes(FMC,CO2_resp_rate,color=Species.Code,shape=Type),
+             alpha=0.85) +
+  scale_color_manual(name="Species",values=all_DRO_palette) +
+  xlab("Simulated Block FMC (%)") + ylab("CO2 Flux (ug CO2/s/g)") +
+  fig_aes
+
+# PNW
+ggplot() +
+  geom_point(data=filter(sim_flux,site=="PNW"),
+             mapping=aes(Block_FMC,Sim_CO2),
+             alpha=0.3,color="#D05038") +
+  geom_point(data=PNW_flux,
+             mapping=aes(FMC,CO2_resp_rate,color=Species.Code,shape=Type),
+             alpha=0.85) +
+  scale_color_manual(name="Species",values=all_PNW_palette) +
+  xlab("Simulated Block FMC (%)") + ylab("CO2 Flux (ug CO2/s/g)") +
   fig_aes
 
 
