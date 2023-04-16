@@ -3,3 +3,4 @@
 .RData
 .Ruserdata
 WTF-Climate-Flux.Rproj
+*.DS_Store
