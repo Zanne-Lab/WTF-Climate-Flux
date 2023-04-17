@@ -5,3 +5,5 @@
 WTF-Climate-Flux.Rproj
 *.DS_Store
 weather_flux/data/weather_stations/**
+weather_flux/data/wood_respiration/**
+bayesian_model/pred.2_2000.txt
