@@ -117,7 +117,9 @@ ggplot() +
            stat="identity",color="blue") +
   geom_line(data=FMC_sim,mapping=aes(date,fuel_block),
             alpha=0.5,color=p_block) +
-  xlab("Date") + ylab("FMC (%)") +
+  xlab("Date") + 
+  scale_y_continuous(name="FMC (%)",
+                     sec.axis=sec_axis(~.,name="Rainfall (mm/hr)")) +
   facet_wrap(~fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")) +
   fig_aes
 dev.off()
@@ -135,7 +137,9 @@ ggplot() +
   geom_line(data=filter(FMC_sim,site%in%c("DRO","PNW")),
             mapping=aes(date,fuel_block),
             alpha=0.5,color=p_block) +
-  xlab("Date") + ylab("FMC (%)") +
+  xlab("Date") + 
+  scale_y_continuous(name="FMC (%)",
+                     sec.axis=sec_axis(~.,name="Rainfall (mm/hr)")) +
   facet_wrap(~site) +
   fig_aes
 dev.off()

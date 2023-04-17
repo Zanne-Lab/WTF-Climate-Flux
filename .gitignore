@@ -7,3 +7,4 @@ WTF-Climate-Flux.Rproj
 weather_flux/data/weather_stations/**
 weather_flux/data/wood_respiration/**
 bayesian_model/pred.2_2000.txt
+FMC_mechanistic_model/fuel_moisture_output.txt
