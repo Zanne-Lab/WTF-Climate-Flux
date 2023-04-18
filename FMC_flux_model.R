@@ -14,8 +14,8 @@ library(lubridate)
 # Only take positive resp rates so beta model can be run
 # Normalize FMC values between 0 and 1 to reduce divergent models
 pine_flux <- read_csv("weather_flux/data/processed/wood_respiration/pine_CO2_clean.csv") %>%
-  filter(CO2_resp_rate > 0) %>%
-  mutate(FMC_nor = FMC/max(pine_flux$FMC))
+  filter(CO2_resp_rate > 0)
+pine_flux <- mutate(pine_flux,FMC_nor = FMC/max(pine_flux$FMC))
 
 FMC_sim <- read_csv("FMC_mechanistic_model/fuel_moisture_output.csv") %>%
   separate(1,into=c("site","date","fuel_stick","fuel_block"),sep=";") %>%

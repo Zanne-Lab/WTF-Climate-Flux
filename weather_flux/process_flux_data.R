@@ -37,6 +37,7 @@ for(x in 1:length(resp_files$id)){
     drive_download(resp_files$id[x],path = sprintf("data/wood_respiration/%s",resp_files$name[x]))
   } else {    message(paste0("File ", resp_files$name[x]," exist"))    }
 }
+# Run the above script a few times, as drive_ls is unreliable
 
 detach(package:googledrive, unload = TRUE)
 
@@ -141,7 +142,7 @@ resp_c2 <- resp %>%
   rbind(resp_c) 
 
 # Visualize IRGA time series for CO2 measurements
-seq <- 1:16
+seq <- 1:18
 pdf("data/processed/wood_respiration/CO2_IRGA_raw.pdf",width=11,height=8.5)
 for(x in 1:length(seq)){
   plot <- ggplot(resp_c2,aes(Etime,CO2d_ppm)) + geom_point(size=0.7) + 
@@ -173,24 +174,6 @@ resp_c3 <- resp_c2 %>%
                                resp_site=="pw"&SampleID=="265","Yes","No")) %>%
   filter(site_error=="No") %>%
   filter(remove_read == "No")
-
-# Visualize cleaned IRGA time series for CO2 measurements
-pdf("data/processed/wood_respiration/CO2_IRGA_clean.pdf",width=11,height=8.5)
-for(x in 1:length(seq)){
-  plot <- ggplot(resp_c3,aes(Etime,CO2d_ppm)) + geom_point(size=0.7) + 
-    facet_wrap_paginate(SampleID~.,nrow=8,ncol=8,scales="free",page=seq[x])
-  print(plot)
-}
-dev.off()
-
-# Visualize IRGA time series for CH4 measurements
-pdf("data/processed/wood_respiration/CH4_IRGA_clean.pdf",width=11,height=8.5)
-for(x in 1:length(seq)){
-  plot <- ggplot(resp_c3,aes(Etime,CH4d_ppm)) + geom_point(size=0.7) + 
-    facet_wrap_paginate(SampleID~.,nrow=8,ncol=8,scales="free",page=seq[x])
-  print(plot)
-}
-dev.off()
 
 
 
@@ -423,7 +406,7 @@ for(x in 1:length(seq2)){
 dev.off()
 
 # Save IRGA data plots for native CO2
-seq3 <- 1:9
+seq3 <- 1:10
 pdf("data/processed/wood_respiration/native_CO2_IRGA.pdf",width=11,height=8.5)
 for(x in 1:length(seq3)){
   plot <- ggplot(resp_native_o2,aes(Etime,CO2d_ppm,color=CO2_resp_outlier)) + geom_point(size=0.7) + 
