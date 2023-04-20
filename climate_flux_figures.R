@@ -8,6 +8,7 @@ library(ggh4x)
 library(forcats)
 library(zoo)
 library(cowplot)
+library(ggpubr)
 
 ########## Load in data ##########
 wthr_FMC <- read_csv("weather_flux/data/processed/weather_stations/wthr_1hr_FMC.csv") %>%
@@ -172,7 +173,7 @@ ggplot(time_flux2) +
   geom_line(mapping=aes(date,Estimate,color=site),alpha=0.5) +
   geom_ribbon(mapping=aes(x=date,y=Estimate,ymin=Q2.5,ymax=Q97.5,
                           fill=site),
-              alpha=0.2,color=NA) +
+              alpha=0.3,color=NA) +
   scale_color_manual(name="Site",values=p_site) +
   scale_fill_manual(name="Site",values=p_site) +
   xlab("Date") + ylab("CO2 Flux (ug CO2/s/g)") +
@@ -186,7 +187,7 @@ ggplot(filter(time_flux2,site%in%c("DRO","PNW"))) +
   geom_line(mapping=aes(date,Estimate,color=site),alpha=0.5) +
   geom_ribbon(mapping=aes(x=date,y=Estimate,ymin=Q2.5,ymax=Q97.5,
                           fill=site),
-              alpha=0.2,color=NA) +
+              alpha=0.3,color=NA) +
   scale_color_manual(name="Site",values=c(p_DRO,p_PNW)) +
   scale_fill_manual(name="Site",values=c(p_DRO,p_PNW)) +
   xlab("Date") + ylab("CO2 Flux (ug CO2/s/g)") +
@@ -210,7 +211,7 @@ b1 <- ggplot() +
   geom_ribbon(filter(bm_fits,site=="DRO"),
               mapping=aes(x=effect1__,y=estimate__,
                           ymin=lower__,ymax=upper__),
-              alpha=0.2,color=NA,fill=p_DRO) +
+              alpha=0.3,color=NA,fill=p_DRO) +
   geom_point(filter(native_flux,site=="DRO"),
              mapping=aes(FMC,CO2_resp_rate,color=Species.Code),
              alpha=0.8) +
@@ -226,7 +227,7 @@ b2 <- ggplot() +
   geom_ribbon(filter(bm_fits,site=="PNW"),
               mapping=aes(x=effect1__,y=estimate__,
                           ymin=lower__,ymax=upper__),
-              alpha=0.2,color=NA,fill=p_PNW) +
+              alpha=0.3,color=NA,fill=p_PNW) +
   geom_point(filter(native_flux,site=="PNW"),
              mapping=aes(FMC,CO2_resp_rate,
                          color=Species.Code),
@@ -244,7 +245,7 @@ d1 <- ggplot() +
              alpha=0.3,color=p_DRO) +
   geom_ribbon(data=filter(sim_flux,site=="DRO"),
               mapping=aes(x=Block_FMC,y=Sim_CO2,ymin=Sim_Q2.5,ymax=Sim_Q97.5),
-              alpha=0.2,color=NA,fill=p_DRO) +
+              alpha=0.3,color=NA,fill=p_DRO) +
   geom_point(data=filter(native_flux,site=="DRO"),
              mapping=aes(FMC,CO2_resp_rate,color=Species.Code),
              alpha=0.8) +
@@ -261,7 +262,7 @@ d2 <- ggplot() +
              alpha=0.3,color=p_PNW) +
   geom_ribbon(data=filter(sim_flux,site=="PNW"),
               mapping=aes(x=Block_FMC,y=Sim_CO2,ymin=Sim_Q2.5,ymax=Sim_Q97.5),
-              alpha=0.2,color=NA,fill=p_PNW) +
+              alpha=0.3,color=NA,fill=p_PNW) +
   geom_point(data=filter(native_flux,site=="PNW"),
              mapping=aes(FMC,CO2_resp_rate,color=Species.Code),
              alpha=0.85) +
@@ -269,6 +270,25 @@ d2 <- ggplot() +
   xlab("Simulated Block FMC (%)") + ylab("CO2 Flux (ug CO2/s/g)") +
   xlim(0,650) + ylim(-0.001,0.125) +
   fig_aes
+
+# PNW + simulations without scale
+ggplot() +
+  geom_point(data=filter(sim_flux,site=="PNW"),
+             mapping=aes(Block_FMC,Sim_CO2),
+             alpha=0.3,color=p_PNW) +
+  geom_ribbon(data=filter(sim_flux,site=="PNW"),
+              mapping=aes(x=Block_FMC,y=Sim_CO2,ymin=Sim_Q2.5,ymax=Sim_Q97.5),
+              alpha=0.3,color=NA,fill=p_PNW) +
+  geom_point(data=filter(native_flux,site=="PNW"),
+             mapping=aes(FMC,CO2_resp_rate,color=Species.Code),
+             alpha=0.85) +
+  scale_color_manual(name="Species",values=p_PNW_sp) +
+  #xlab("Simulated Block FMC (%)") + ylab("CO2 Flux (ug CO2/s/g)") +
+  fig_aes +
+  theme(legend.position="none",
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank())
+
 
 #....... Combined Plot ####
 png("figures/Fig_natives_BM_sim.png",width=2500,height=1800,res=250)
@@ -288,7 +308,7 @@ plot_grid(b1 + theme(legend.position="none",
                      axis.title.y = element_blank()),
           nrow=2,ncol=2,
           labels=c("A","B","C","D"),
-          align="v",
+          align="hv",
           axis="tblr")
 dev.off()
 
@@ -305,10 +325,11 @@ ML_com <- pine_flux %>%
          sd_pro_ML = round(sd_pro_ML,2),
          Carbon_por = round(Carbon_por,2))
 
-png("figures/Fig_mass_loss_comparison.png",width=2500,height=1600,res=250)
+# Pines
+png("figures/Fig_pine_mass_loss_comparison.png",width=2500,height=1600,res=250)
 ggplot(ML_com,aes(mean_pro_ML,Carbon_por,color=months)) +
   geom_abline(intercept=0, slope=1) +
-  geom_point(size=2,alpha=0.95) +
+  geom_point(size=2.2,alpha=0.95,shape=17) +
   scale_color_gradient(low="#a2b3ba",high="#2c3133") +
   facet_wrap(~fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")) +
   xlab("Carbon Loss (measured)") +
@@ -316,18 +337,6 @@ ggplot(ML_com,aes(mean_pro_ML,Carbon_por,color=months)) +
   xlim(0,1) + ylim(0,1) +
   fig_aes
 dev.off()
-
-ML_com2 <- ML_com %>% mutate(months = as.character(months))
-
-ggplot(ML_com2,aes(mean_pro_ML,Carbon_por,color=site)) +
-  geom_abline(intercept=0, slope=1) +
-  geom_point(size=2,alpha=0.95) +
-  scale_color_manual(values=p_site) +
-  facet_wrap(~months.) +
-  xlab("Carbon Loss (measured)") +
-  ylab("Carbon Flux (simulated)") +
-  xlim(0,1) + ylim(0,1) +
-  fig_aes
 
 ML_natives <- native_flux %>%
   #mutate(pro.mass.loss = 1 - harvest_dry_wt/init_dry_wt) %>%
@@ -340,18 +349,18 @@ ML_natives <- native_flux %>%
          Carbon_por = round(Carbon_por,2)) %>%
   mutate(months = as.character(months))
 
-ML_DRO <- filter(ML_natives,site=="DRO") 
-
-ggplot(ML_natives,aes(mean_pro_ML,Carbon_por,
-                  color=Species.Code)) +
+png("figures/Fig_native_mass_loss_comparison.png",width=2500,height=1200,res=250)
+ggplot(ML_natives,aes(mean_pro_ML,Carbon_por,color=Species.Code)) +
   geom_abline(intercept=0,slope=1) +
-  geom_point(alpha=0.80,size=2) +
-  scale_color_manual(values=p_all_sp) +
+  geom_point(alpha=0.80,size=2.2) +
+  scale_color_manual(values=p_all_sp,
+                     name="Species") +
   facet_wrap(~site) +
   xlab("Carbon Loss (measured)") +
   ylab("Carbon Flux (simulated)") +
   xlim(0,1) + ylim(0,1) +
   fig_aes
+dev.off()
 
 
 
@@ -404,10 +413,21 @@ FMC_cal2 <- FMC_cal %>%
 block_FMC <- pine_flux %>%
   mutate(date = as_datetime(paste(harvest_date,"12:00:00"))) %>%
   group_by(site,date) %>%
-  summarize(FMC = mean(FMC),
-            sd_FMC = sd(FMC)) %>%
-  rbind(FMC_cal2)
+  summarize(FMC = mean(FMC,na.rm=TRUE),
+            sd_FMC = sd(FMC,na.rm=TRUE)) %>%
+  rbind(FMC_cal2) %>%
+  filter(site!="HQ_AWC")
 
+png("figures/S_block_FMC.png",width=2500,height=1700,res=250)
+ggplot() +
+  geom_line(data=FMC_sim,mapping=aes(date,fuel_block),
+            alpha=0.5,color=p_block) +
+  geom_point(data=block_FMC,mapping=aes(date,FMC),
+             color=p_pira,shape=17,size=1.8) +
+  xlab("Date") + ylab("Fuel moisture content (%)") +
+  facet_wrap(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) +
+  fig_aes
+dev.off()
 
 #..Weather data ####
 #......Weather for each site (rainfall and temperature) ####
