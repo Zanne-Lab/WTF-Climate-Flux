@@ -1,10 +1,9 @@
-# Download weather data from WTF-Climate repo
+# Download climate data from WTF-Climate repo
 
-library(readr)
-library(dplyr)
+library(tidyverse)
 
-git_file <- "https://github.com/Zanne-Lab/WTF-Climate/raw/main/wthr_1hr_final.csv"
-wthr_final <- read_csv(url(git_file))
+wthr_url <- "https://github.com/Zanne-Lab/WTF-Climate/raw/main/wthr_1hr_final.csv"
+wthr_final <- read_csv(url(wthr_url))
 
 # Select variables for FMC-flux model
 wthr_FMC <- wthr_final %>%

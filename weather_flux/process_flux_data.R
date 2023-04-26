@@ -211,7 +211,8 @@ Tcham <- resp %>%
 
 ########## Get wood block weights and other metadata ##########
 # Processed weights from Law et al. 2023 (includes natives, pine gradient, drought, rescues)
-weights_all <- read_csv("data/processed/wood_weights_all.csv") 
+weights_url <- "https://github.com/Zanne-Lab/WTF-Native-Wood/raw/main/wood_weights_all.csv"
+weights_all <- read_csv(url(weights_url))
 
 # FMC will be calculated later, so harvest_dry_wt was recalculated for pines for consistency
 weights_all_c <- weights_all %>%
