@@ -11,23 +11,6 @@ library(ggforce)
 
 ########## Download data and prep files for reading ##########
 
-# Create local directories to store data
-# Creates: data/wood_respiration/ and data/processed/wood_respiration/
-make_resp_wr_dirs <- function() {
-  if(!dir.exists("data/wood_respiration/")){
-    message(paste0("ATTENTION, This function is creating the following directory ",
-                   getwd(),"/data/wood_respiration/"))
-    dir.create("data/wood_respiration/")
-  }
-  
-  if(!dir.exists("data/processed/wood_respiration/")){
-    message(paste0("ATTENTION, This function is creating the following directory ",
-                   getwd(),"/data/processed/wood_respiration/"))
-    dir.create("data/processed/wood_respiration/")
-  }
-}
-make_resp_wr_dirs()
-
 # Get files names for respiration data from Google Drive
 resp_files <- drive_ls("WTFProject/data/wood_respiration", recursive = TRUE, pattern= ".csv|.txt")
 

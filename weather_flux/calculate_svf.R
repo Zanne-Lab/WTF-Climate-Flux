@@ -37,6 +37,8 @@ for (i in 1:length(svf_files)){
   svf_out <- rbind(svf_out,temp)
 }
 
+library(tidyverse)
+
 svf_avg <- svf_out %>%
   separate(fname0,c("site","location","number"),"_") %>%
   group_by(site,location) %>%
