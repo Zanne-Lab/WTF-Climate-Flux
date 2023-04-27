@@ -317,9 +317,13 @@ dev.off()
 #..Fig 5. Natives and flux vs. mass loss ####
 ML_com <- pine_flux %>%
   mutate(pro.mass.loss = 1 - harvest_dry_wt/init_dry_wt) %>%
+  filter(!is.na(pro.mass.loss)) %>%
   group_by(site,months) %>%
-  summarize(mean_pro_ML = mean(pro.mass.loss,na.rm=TRUE),
-            sd_pro_ML = sd(pro.mass.loss,na.rm=TRUE)) %>%
+  summarize(mean_pro_ML = mean(pro.mass.loss),
+            sd_pro_ML = sd(pro.mass.loss),
+            n = n()) %>%
+  mutate(n = as.numeric(n),
+         se_pro_ML = sd_pro_ML/sqrt(n)) %>%
   right_join(int_mass_loss,by=c("site","months")) %>%
   mutate(mean_pro_ML = round(mean_pro_ML,2),
          sd_pro_ML = round(sd_pro_ML,2),
@@ -330,6 +334,10 @@ png("figures/Fig_pine_mass_loss_comparison.png",width=2500,height=1600,res=250)
 ggplot(ML_com,aes(mean_pro_ML,Carbon_por,color=months)) +
   geom_abline(intercept=0, slope=1) +
   geom_point(size=2.2,alpha=0.95,shape=17) +
+  geom_errorbarh(mapping=aes(xmin=mean_pro_ML-se_pro_ML,
+                             xmax=mean_pro_ML+se_pro_ML,
+                             color=months),
+                 alpha=0.85) +
   scale_color_gradient(low="#a2b3ba",high="#2c3133") +
   facet_wrap(~fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")) +
   xlab("Carbon Loss (measured)") +
@@ -339,10 +347,13 @@ ggplot(ML_com,aes(mean_pro_ML,Carbon_por,color=months)) +
 dev.off()
 
 ML_natives <- native_flux %>%
-  #mutate(pro.mass.loss = 1 - harvest_dry_wt/init_dry_wt) %>%
+  filter(!is.na(pro.mass.loss)) %>%
   group_by(site,months,Species.Code) %>%
   summarize(mean_pro_ML = mean(pro.mass.loss,na.rm=TRUE),
-            sd_pro_ML = sd(pro.mass.loss,na.rm=TRUE)) %>%
+            sd_pro_ML = sd(pro.mass.loss,na.rm=TRUE),
+            n = n()) %>%
+  mutate(n = as.numeric(n),
+         se_pro_ML = sd_pro_ML/sqrt(n)) %>%
   left_join(int_mass_loss,by=c("site","months")) %>%
   mutate(mean_pro_ML = round(mean_pro_ML,2),
          sd_pro_ML = round(sd_pro_ML,2),
@@ -353,6 +364,10 @@ png("figures/Fig_native_mass_loss_comparison.png",width=2500,height=1200,res=250
 ggplot(ML_natives,aes(mean_pro_ML,Carbon_por,color=Species.Code)) +
   geom_abline(intercept=0,slope=1) +
   geom_point(alpha=0.80,size=2.2) +
+  geom_errorbarh(mapping=aes(xmin=mean_pro_ML-se_pro_ML,
+                             xmax=mean_pro_ML+se_pro_ML,
+                             color=Species.Code),
+                 alpha=0.60) +
   scale_color_manual(values=p_all_sp,
                      name="Species") +
   facet_wrap(~site) +
