@@ -18,3 +18,4 @@ weather_flux/data/processed/svf_pics/**
 !weather_flux/data/processed/svf_pics/svf_pine.csv
 bayesian_model/pred.2_2000.txt
 FMC_mechanistic_model/fuel_moisture_output.txt
+figures/archive/**

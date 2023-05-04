@@ -27,25 +27,6 @@ int_mass_loss <- read_csv("mass_loss.csv") %>%
 
 # HQ_AWC is removed from plotting as it was not used in analysis
 
-# SILO historical dataset
-SILO_hist <- SILO %>%
-  mutate(year = year(day),
-         mean_temp = (max_temp+min_temp)/2) %>%
-  group_by(site,year) %>%
-  summarize(an_Rain = sum(daily_rain, na.rm = TRUE),
-            an_AirTC = mean(mean_temp),
-            an_AirTC_max = max(max_temp),
-            an_AirTC_min = min(min_temp)) %>%
-  ungroup() %>%
-  group_by(site) %>%
-  summarize(hist_Rain_max = max(an_Rain),
-            hist_Rain_min = min(an_Rain),
-            hist_Rain_mean = mean(an_Rain),
-            hist_AirTC_mean = mean(an_AirTC),
-            hist_AirTC_max = max(an_AirTC_max),
-            hist_AirTC_min = min(an_AirTC_min)) %>%
-  ungroup()
-
 
 
 ########## Set color palettes and common aesthetics ##########
@@ -91,7 +72,7 @@ fig_aes <- theme_bw() +
 
 ########## Main text figures ##########
 
-#..Fig 1. Bayesian model from pine blocks ####
+#..Fig 3. Bayesian model from pine blocks ####
 bm <- ggplot() + 
   geom_smooth(bm_fits,mapping=aes(effect1__,estimate__,color=site)) + 
   scale_color_manual(name="Site",values=p_site) +
@@ -104,26 +85,28 @@ bm <- ggplot() +
   fig_aes
 print(bm)
 
-png("figures/S_BM_pines.png",width=2500,height=1500,res=250)
+png("figures/Fig3_BM_pines.png",width=3000,height=2000,res=300)
 bm + geom_point(pine_flux,mapping=aes(FMC,CO2_resp_rate),
-                color=p_pira,shape=17,alpha=0.8)
+                color=p_pira,shape=17,alpha=0.8) +
+  guides(color=FALSE, fill=FALSE)
 dev.off()
 
 
 
-#..Fig 2. FMC stick calibration vs. block simulations ####
+#..Fig 4. FMC stick calibration vs. block simulations ####
 FMC_sim_p <- FMC_sim %>%
   select(-FMC_nor) %>%
   pivot_longer(!c(date,site),names_to="var",values_to="FMC") %>%
   mutate(Model = ifelse(var=="fuel_stick",
-                            "Stick Calibration","Block Simulation"))
+                            "Stick FMC","Block Moisture Content"))
 
-png("figures/Fig_FMC_cal_sim_rain.png",width=2500,height=1500,res=250)
+png("figures/Fig4_FMC_sim_rain.png",width=3000,height=1900,res=300)
 ggplot() + 
   geom_line(data=FMC_sim_p,mapping=aes(date,FMC,color=Model),
             alpha=0.5) +
   scale_color_manual(values=c(p_block,p_stick)) +
-  geom_bar(data=wthr_FMC,mapping=aes(date,Rain_mm_Tot),
+  geom_bar(data=filter(wthr_FMC, Rain_mm_Tot > 0),
+           mapping=aes(date,Rain_mm_Tot),
            stat="identity",color="blue") +
   geom_line(data=FMC_sim,mapping=aes(date,fuel_block),
             alpha=0.5,color=p_block) +
@@ -131,32 +114,13 @@ ggplot() +
   scale_y_continuous(name="FMC (%)",
                      sec.axis=sec_axis(~.,name="Rainfall (mm/hr)")) +
   facet_wrap(~fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")) +
-  fig_aes
-dev.off()
-
-#......DRO and PNW only ####
-png("figures/Fig_FMC_cal_sim_rain_DP.png",width=2500,height=1200,res=250)
-ggplot() + 
-  geom_line(data=filter(FMC_sim_p,site%in%c("DRO","PNW")),
-            mapping=aes(date,FMC,color=Model),
-            alpha=0.5) +
-  scale_color_manual(values=c(p_block,p_stick)) +
-  geom_bar(data=filter(wthr_FMC,site%in%c("DRO","PNW")),
-           mapping=aes(date,Rain_mm_Tot),
-           stat="identity",color="blue") +
-  geom_line(data=filter(FMC_sim,site%in%c("DRO","PNW")),
-            mapping=aes(date,fuel_block),
-            alpha=0.5,color=p_block) +
-  xlab("Date") + 
-  scale_y_continuous(name="FMC (%)",
-                     sec.axis=sec_axis(~.,name="Rainfall (mm/hr)")) +
-  facet_wrap(~site) +
-  fig_aes
+  fig_aes +
+  theme(legend.position = "top")
 dev.off()
 
 
 
-#..Fig 3. Time-resolved CO2 Flux ####
+#..Fig 5. Time-resolved CO2 Flux ####
 time_flux2 <- data.frame(site = wthr_FMC$site,
                          date = wthr_FMC$date,
                          Estimate = time_flux$Estimate,
@@ -164,8 +128,7 @@ time_flux2 <- data.frame(site = wthr_FMC$site,
                          Q2.5 = time_flux$Q2.5,
                          Q97.5 = time_flux$Q97.5)
 
-#......All sites ####
-png("figures/Fig_CO2_time.png",width=2500,height=1500,res=250)
+png("figures/Fig5_CO2_time.png",width=3000,height=2000,res=300)
 ggplot(time_flux2) +
   geom_line(mapping=aes(date,Estimate,color=site),alpha=0.5) +
   geom_ribbon(mapping=aes(x=date,y=Estimate,ymin=Q2.5,ymax=Q97.5,
@@ -175,26 +138,13 @@ ggplot(time_flux2) +
   scale_fill_manual(name="Site",values=p_site) +
   xlab("Date") + ylab("CO2 Flux (ug CO2/s/g)") +
   facet_wrap(~fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")) +
-  fig_aes
-dev.off()
-
-#......DRO and PNW only ####
-png("figures/Fig_CO2_time_DP.png",width=2500,height=1200,res=250)
-ggplot(filter(time_flux2,site%in%c("DRO","PNW"))) +
-  geom_line(mapping=aes(date,Estimate,color=site),alpha=0.5) +
-  geom_ribbon(mapping=aes(x=date,y=Estimate,ymin=Q2.5,ymax=Q97.5,
-                          fill=site),
-              alpha=0.3,color=NA) +
-  scale_color_manual(name="Site",values=c(p_DRO,p_PNW)) +
-  scale_fill_manual(name="Site",values=c(p_DRO,p_PNW)) +
-  xlab("Date") + ylab("CO2 Flux (ug CO2/s/g)") +
-  facet_grid(~site) +
-  fig_aes
+  fig_aes +
+  guides(color=FALSE, fill=FALSE)
 dev.off()
 
 
 
-#..Fig 4. Natives and FMC/Flux Simulations ####
+#..Natives and FMC/Flux Simulations ####
 sim_flux <- data.frame(site = FMC_sim$site,
                        Block_FMC = FMC_sim$fuel_block,
                        Sim_CO2 = time_flux$Estimate,
@@ -269,7 +219,7 @@ d2 <- ggplot() +
   fig_aes
 
 # PNW + simulations without scale
-ggplot() +
+p_ns <- ggplot() +
   geom_point(data=filter(sim_flux,site=="PNW"),
              mapping=aes(Block_FMC,Sim_CO2),
              alpha=0.3,color=p_PNW) +
@@ -285,10 +235,12 @@ ggplot() +
   theme(legend.position="none",
         axis.title.y = element_blank(),
         axis.title.x = element_blank())
+png("figures/Fig6_PNW_sim.png",width=1500,height=1500,res=200)
+print(p_ns)
+dev.off()
 
-
-#....... Combined Plot ####
-png("figures/Fig_natives_BM_sim.png",width=2500,height=1800,res=250)
+#.....Fig 6. Combined Plot ####
+png("figures/Fig6_natives_BM_sim.png",width=3000,height=2300,res=300)
 plot_grid(b1 + theme(legend.position="none",
                      axis.text.x = element_blank(),
                      axis.ticks.x = element_blank(),
@@ -311,7 +263,7 @@ dev.off()
 
 
 
-#..Fig 5. Natives and flux vs. mass loss ####
+#..Flux vs. mass loss ####
 ML_com <- pine_flux %>%
   mutate(pro.mass.loss = 1 - harvest_dry_wt/init_dry_wt) %>%
   filter(!is.na(pro.mass.loss)) %>%
@@ -326,8 +278,9 @@ ML_com <- pine_flux %>%
          sd_pro_ML = round(sd_pro_ML,2),
          Carbon_por = round(Carbon_por,2))
 
-# Pines
-png("figures/Fig_pine_mass_loss_comparison.png",width=2500,height=1600,res=250)
+#....S3. Pines ####
+png("figures/S3_pine_mass_loss_comparison.png",
+    width=3000,height=1900,res=300)
 ggplot(ML_com,aes(mean_pro_ML,Carbon_por,color=months)) +
   geom_abline(intercept=0, slope=1) +
   geom_point(size=2.2,alpha=0.95,shape=17) +
@@ -343,6 +296,7 @@ ggplot(ML_com,aes(mean_pro_ML,Carbon_por,color=months)) +
   fig_aes
 dev.off()
 
+#....Fig 7. Natives ####
 ML_natives <- native_flux %>%
   filter(!is.na(pro.mass.loss)) %>%
   group_by(site,months,Species.Code) %>%
@@ -357,7 +311,8 @@ ML_natives <- native_flux %>%
          Carbon_por = round(Carbon_por,2)) %>%
   mutate(months = as.character(months))
 
-png("figures/Fig_native_mass_loss_comparison.png",width=2500,height=1200,res=250)
+png("figures/Fig7_native_mass_loss_comparison.png",
+    width=3000,height=1500,res=300)
 ggplot(ML_natives,aes(mean_pro_ML,Carbon_por,color=Species.Code)) +
   geom_abline(intercept=0,slope=1) +
   geom_point(alpha=0.80,size=2.2) +
@@ -368,8 +323,8 @@ ggplot(ML_natives,aes(mean_pro_ML,Carbon_por,color=Species.Code)) +
   scale_color_manual(values=p_all_sp,
                      name="Species") +
   facet_wrap(~site) +
-  xlab("Carbon Loss (measured)") +
-  ylab("Carbon Flux (simulated)") +
+  xlab("Carbon Loss (g/g/hr)") +
+  ylab("Carbon Flux (g/g/hr)") +
   xlim(0,1) + ylim(0,1) +
   fig_aes
 dev.off()
@@ -379,8 +334,8 @@ dev.off()
 ########## Supplementary Figures ##########
 
 #..FMC mechanistic model ####
-#......FMC stick observations and calibration ####
-FMC_cal <- wthr_FMC %>%
+#......S1. FMC stick observations and calibration ####
+FMC_m <- wthr_FMC %>%
   select(site,date,FMC_norm) %>%
   left_join(filter(FMC_sim_p,var=="fuel_stick"),
             by=c("site","date")) %>%
@@ -389,15 +344,17 @@ FMC_cal <- wthr_FMC %>%
   mutate(Stuck_FMC = ifelse(Stick_FMC=="FMC_norm",
                         "Measurements","Simulations"))
 
-png("figures/S_stick_FMC.png",width=2500,height=1500,res=250)
-ggplot(FMC_cal,aes(date,FMC,color=Stick_FMC)) +
+png("figures/S1_stick_FMC.png",width=3000,height=2000,res=300)
+ggplot(FMC_m,aes(date,FMC,color=Stick_FMC)) +
   geom_line(alpha=0.5) +
   scale_color_manual(values=c(p_stick,p_WTF),
                      name="Stick FMC",
-                     labels=c("Measurements (normalized)","Model Calibrations")) +
+                     labels=c("Model Calibrations",
+                              "Measurements (normalized)")) +
   xlab("Date") + ylab("Fuel moisture content (%)") +
   facet_wrap(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) +
-  fig_aes
+  fig_aes +
+  theme(legend.position = "top")
 dev.off()
 
 
@@ -430,7 +387,7 @@ block_FMC <- pine_flux %>%
   rbind(FMC_cal2) %>%
   filter(site!="HQ_AWC")
 
-png("figures/S_block_FMC.png",width=2500,height=1700,res=250)
+png("figures/S2_block_FMC.png",width=3000,height=2000,res=300)
 ggplot() +
   geom_line(data=FMC_sim,mapping=aes(date,fuel_block),
             alpha=0.5,color=p_block) +
@@ -521,6 +478,40 @@ ggplot(FMC_sim_p,aes(date,FMC,color=Model)) +
             alpha=0.3,color=p_block) +
   xlab("Date") + ylab("FMC (%)") +
   facet_wrap(~fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")) +
+  fig_aes
+dev.off()
+
+#..Fig 4 DRO and PNW only ####
+png("figures/Fig_FMC_cal_sim_rain_DP.png",width=2500,height=1200,res=250)
+ggplot() + 
+  geom_line(data=filter(FMC_sim_p,site%in%c("DRO","PNW")),
+            mapping=aes(date,FMC,color=Model),
+            alpha=0.5) +
+  scale_color_manual(values=c(p_block,p_stick)) +
+  geom_bar(data=filter(wthr_FMC,site%in%c("DRO","PNW")),
+           mapping=aes(date,Rain_mm_Tot),
+           stat="identity",color="blue") +
+  geom_line(data=filter(FMC_sim,site%in%c("DRO","PNW")),
+            mapping=aes(date,fuel_block),
+            alpha=0.5,color=p_block) +
+  xlab("Date") + 
+  scale_y_continuous(name="FMC (%)",
+                     sec.axis=sec_axis(~.,name="Rainfall (mm/hr)")) +
+  facet_wrap(~site) +
+  fig_aes
+dev.off()
+
+#......DRO and PNW only ####
+png("figures/Fig_CO2_time_DP.png",width=2500,height=1200,res=250)
+ggplot(filter(time_flux2,site%in%c("DRO","PNW"))) +
+  geom_line(mapping=aes(date,Estimate,color=site),alpha=0.5) +
+  geom_ribbon(mapping=aes(x=date,y=Estimate,ymin=Q2.5,ymax=Q97.5,
+                          fill=site),
+              alpha=0.3,color=NA) +
+  scale_color_manual(name="Site",values=c(p_DRO,p_PNW)) +
+  scale_fill_manual(name="Site",values=c(p_DRO,p_PNW)) +
+  xlab("Date") + ylab("CO2 Flux (ug CO2/s/g)") +
+  facet_grid(~site) +
   fig_aes
 dev.off()
 
