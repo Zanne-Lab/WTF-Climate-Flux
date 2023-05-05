@@ -528,3 +528,38 @@ plot_grid(d1,d2,
           nrow=1,ncol=2,
           labels=c("A","B"))
 dev.off()
+
+#..Pine flux vs. mass loss including termite activity ####
+ML_com_t <- pine_flux %>%
+  mutate(pro.mass.loss = 1 - harvest_dry_wt/init_dry_wt) %>%
+  filter(!is.na(pro.mass.loss)) %>%
+  filter(!is.na(termite_present)) %>%
+  group_by(site,months,termite_present) %>%
+  summarize(mean_pro_ML = mean(pro.mass.loss),
+            sd_pro_ML = sd(pro.mass.loss),
+            n = n()) %>%
+  mutate(n = as.numeric(n),
+         se_pro_ML = sd_pro_ML/sqrt(n)) %>%
+  right_join(int_mass_loss,by=c("site","months")) %>%
+  mutate(mean_pro_ML = round(mean_pro_ML,2),
+         sd_pro_ML = round(sd_pro_ML,2),
+         Carbon_por = round(Carbon_por,2),
+         termite_present = as.character(termite_present))
+
+png("figures/S3.5_pine_mass_loss_comparison.png",
+    width=3000,height=1900,res=300)
+ggplot(ML_com_t,aes(mean_pro_ML,Carbon_por,color=termite_present)) +
+  geom_abline(intercept=0, slope=1) +
+  geom_point(size=2.2,alpha=0.95,shape=17) +
+  geom_errorbarh(mapping=aes(xmin=mean_pro_ML-se_pro_ML,
+                             xmax=mean_pro_ML+se_pro_ML,
+                             color=termite_present),
+                 alpha=0.85) +
+  #scale_color_gradient(low="#a2b3ba",high="#2c3133") +
+  facet_wrap(~fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")) +
+  xlab("Carbon Loss (measured)") +
+  ylab("Carbon Flux (simulated)") +
+  xlim(0,1) + ylim(0,1) +
+  fig_aes
+dev.off()
+
