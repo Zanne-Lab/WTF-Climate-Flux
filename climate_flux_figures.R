@@ -8,7 +8,7 @@ library(ggh4x)
 library(forcats)
 library(zoo)
 library(cowplot)
-library(ggpubr)
+library(ggmagnify)
 
 ########## Load in data ##########
 wthr_FMC <- read_csv("weather_flux/data/processed/weather_stations/wthr_1hr_FMC.csv")
@@ -40,6 +40,12 @@ p_site_a <- c(p_site[1],p_site[3],p_site[2],p_site[5],p_site[4])
 p_site_strip <- strip_themed(background_x = elem_list_rect(fill = p_site_a))
 
 # Species palettes
+# Set species level
+sp.order <- c("ALSC","ARPE","CAAU","CASU","CLOB",
+              "DYPA","MYGL","NONO","ROAN","SYSA",
+              "EUCU","EULE","MEST","MEVI","PEBA","TEAR")
+native_flux$Species.Code<-factor(native_flux$Species.Code, levels = sp.order)
+
 p_pira <- "#700A1F"
 p_DRO_sp <- pokepal(44,10)
 p_PNW_sp <- pokepal(141,6)
@@ -47,9 +53,7 @@ p_DRO_sp_all <- c("#7090A0","#F8C050","#486878","#603000","#A07030","#D0A060",
                      "#E84800","#F87000",p_pira,"#103058","#805010")
 p_PNW_sp_all <- c("#D8C088","#F8E0A8","#B09860","#686868","#685820",
                   p_pira,"#D8D8D0")
-p_all_sp <- c("#7090A0","#F8C050","#486878","#603000","#A07030","#D0A060",
-                    "#D8C088","#F8E0A8","#B09860","#686868","#E84800","#F87000",
-                    "#685820","#103058","#805010","#D8D8D0")
+p_all_sp <- c(p_DRO_sp,p_PNW_sp)
 
 # Colors for weather plots
 p_WTF <- "#7870C8"
@@ -218,6 +222,11 @@ d2 <- ggplot() +
   xlim(0,650) + ylim(-0.001,0.125) +
   fig_aes
 
+
+d2 + ggmagnify::geom_magnify(from=c(0,-0.001,40,0.05),
+                             to=c(400,0.08,600,0.12),
+                  linewidth = 1)
+
 # PNW + simulations without scale
 p_ns <- ggplot() +
   geom_point(data=filter(sim_flux,site=="PNW"),
@@ -290,8 +299,8 @@ ggplot(ML_com,aes(mean_pro_ML,Carbon_por,color=months)) +
                  alpha=0.85) +
   scale_color_gradient(low="#a2b3ba",high="#2c3133") +
   facet_wrap(~fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")) +
-  xlab("Carbon Loss (measured)") +
-  ylab("Carbon Flux (simulated)") +
+  xlab("Carbon Loss (g/g/hr)") +
+  ylab("Carbon Flux (g/g/hr)") +
   xlim(0,1) + ylim(0,1) +
   fig_aes
 dev.off()
@@ -533,8 +542,7 @@ dev.off()
 ML_com_t <- pine_flux %>%
   mutate(pro.mass.loss = 1 - harvest_dry_wt/init_dry_wt) %>%
   filter(!is.na(pro.mass.loss)) %>%
-  filter(!is.na(termite_present)) %>%
-  group_by(site,months,termite_present) %>%
+  group_by(site,months,termite.attack) %>%
   summarize(mean_pro_ML = mean(pro.mass.loss),
             sd_pro_ML = sd(pro.mass.loss),
             n = n()) %>%
@@ -544,22 +552,28 @@ ML_com_t <- pine_flux %>%
   mutate(mean_pro_ML = round(mean_pro_ML,2),
          sd_pro_ML = round(sd_pro_ML,2),
          Carbon_por = round(Carbon_por,2),
-         termite_present = as.character(termite_present))
+         termite.attack = ifelse(termite.attack==1,"Yes","No")) %>%
+  filter(!is.na(termite.attack))
 
 png("figures/S3.5_pine_mass_loss_comparison.png",
-    width=3000,height=1900,res=300)
-ggplot(ML_com_t,aes(mean_pro_ML,Carbon_por,color=termite_present)) +
+    width=3000,height=2000,res=300)
+ggplot(ML_com_t,aes(mean_pro_ML,Carbon_por,
+                    color=termite.attack,label=months)) +
   geom_abline(intercept=0, slope=1) +
   geom_point(size=2.2,alpha=0.95,shape=17) +
   geom_errorbarh(mapping=aes(xmin=mean_pro_ML-se_pro_ML,
                              xmax=mean_pro_ML+se_pro_ML,
-                             color=termite_present),
+                             color=termite.attack),
                  alpha=0.85) +
+  #geom_text(nudge_y=0.08) +
   #scale_color_gradient(low="#a2b3ba",high="#2c3133") +
+  scale_color_manual(name="Termite discovery",
+                     values=c("black","orange")) +
   facet_wrap(~fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")) +
-  xlab("Carbon Loss (measured)") +
-  ylab("Carbon Flux (simulated)") +
+  xlab("Carbon Loss (g/g/hr)") +
+  ylab("Carbon Flux (g/g/hr)") +
   xlim(0,1) + ylim(0,1) +
-  fig_aes
+  fig_aes +
+  theme(legend.position = "top")
 dev.off()
 
