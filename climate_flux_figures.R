@@ -39,6 +39,7 @@ p_PNW <- p_site[4]
 p_site_a <- c(p_site[1],p_site[3],p_site[2],p_site[5],p_site[4])
 p_site_strip <- strip_themed(background_x = elem_list_rect(fill = p_site_a))
 
+
 # Species palettes
 # Set species level
 sp.order <- c("ALSC","ARPE","CAAU","CASU","CLOB",
@@ -549,7 +550,8 @@ ML_com_t <- pine_flux %>%
   mutate(n = as.numeric(n),
          se_pro_ML = sd_pro_ML/sqrt(n)) %>%
   right_join(int_mass_loss,by=c("site","months")) %>%
-  mutate(mean_pro_ML = round(mean_pro_ML,2),
+  mutate(mass_to_flux = (Carbon_por/mean_pro_ML)*100,
+         mean_pro_ML = round(mean_pro_ML,2),
          sd_pro_ML = round(sd_pro_ML,2),
          Carbon_por = round(Carbon_por,2),
          termite.attack = ifelse(termite.attack==1,"Yes","No")) %>%
@@ -568,7 +570,7 @@ ggplot(ML_com_t,aes(mean_pro_ML,Carbon_por,
   #geom_text(nudge_y=0.08) +
   #scale_color_gradient(low="#a2b3ba",high="#2c3133") +
   scale_color_manual(name="Termite discovery",
-                     values=c("black","orange")) +
+                     values=c("gray30","salmon")) +
   facet_wrap(~fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")) +
   xlab("Carbon Loss (g/g/hr)") +
   ylab("Carbon Flux (g/g/hr)") +
@@ -576,4 +578,21 @@ ggplot(ML_com_t,aes(mean_pro_ML,Carbon_por,
   fig_aes +
   theme(legend.position = "top")
 dev.off()
+
+
+#..Proportion mass loss to flux ####
+site.order <- c("DRO","MLRF","MLES","STCK","PNW")
+ML_com_t$site <- factor(ML_com_t$site, levels = site.order)
+
+ggplot(ML_com_t, aes(site, mass_to_flux, color=termite.attack)) +
+  geom_boxplot() +
+  scale_color_manual(name="Termite discovery",
+                     values=c("gray30","salmon")) +
+  xlab("Site") +
+  ylab("Percent Carbon flux per unit mass loss") +
+  fig_aes +
+  theme(legend.position = "top")
+  
+
+
 
