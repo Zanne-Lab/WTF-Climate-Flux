@@ -8,7 +8,6 @@ library(ggh4x)
 library(forcats)
 library(zoo)
 library(cowplot)
-library(ggmagnify)
 
 ########## Load in data ##########
 wthr_FMC <- read_csv("weather_flux/data/processed/weather_stations/wthr_1hr_FMC.csv")
@@ -224,12 +223,9 @@ d2 <- ggplot() +
   fig_aes
 
 
-d2 + ggmagnify::geom_magnify(from=c(0,-0.001,40,0.05),
-                             to=c(400,0.08,600,0.12),
-                  linewidth = 1)
-
 # PNW + simulations without scale
-p_ns <- ggplot() +
+png("figures/Fig6_PNW_sim.png",width=1100,height=1100,res=320)
+ggplot() +
   geom_point(data=filter(sim_flux,site=="PNW"),
              mapping=aes(Block_FMC,Sim_CO2),
              alpha=0.3,color=p_PNW) +
@@ -238,15 +234,13 @@ p_ns <- ggplot() +
               alpha=0.3,color=NA,fill=p_PNW) +
   geom_point(data=filter(native_flux,site=="PNW"),
              mapping=aes(FMC,CO2_resp_rate,color=Species.Code),
-             alpha=0.85) +
+             alpha=0.85,size=2) +
   scale_color_manual(name="Species",values=p_PNW_sp) +
   #xlab("Simulated Block FMC (%)") + ylab("CO2 Flux (ug CO2/s/g)") +
   fig_aes +
   theme(legend.position="none",
         axis.title.y = element_blank(),
         axis.title.x = element_blank())
-png("figures/Fig6_PNW_sim.png",width=1500,height=1500,res=200)
-print(p_ns)
 dev.off()
 
 #.....Fig 6. Combined Plot ####
@@ -274,42 +268,51 @@ dev.off()
 
 
 #..Flux vs. mass loss ####
-ML_com <- pine_flux %>%
-  mutate(pro.mass.loss = 1 - harvest_dry_wt/init_dry_wt) %>%
+ML_com_t <- pine_flux %>%
   filter(!is.na(pro.mass.loss)) %>%
-  group_by(site,months) %>%
+  group_by(site,months,termite.attack) %>%
   summarize(mean_pro_ML = mean(pro.mass.loss),
             sd_pro_ML = sd(pro.mass.loss),
             n = n()) %>%
   mutate(n = as.numeric(n),
          se_pro_ML = sd_pro_ML/sqrt(n)) %>%
   right_join(int_mass_loss,by=c("site","months")) %>%
-  mutate(mean_pro_ML = round(mean_pro_ML,2),
+  mutate(mass_to_flux = (Carbon_por/mean_pro_ML)*100,
+         mean_pro_ML = round(mean_pro_ML,2),
          sd_pro_ML = round(sd_pro_ML,2),
-         Carbon_por = round(Carbon_por,2))
+         Carbon_por = round(Carbon_por,2),
+         termite.attack = ifelse(termite.attack==1,"Yes","No")) %>%
+  filter(!is.na(termite.attack))
 
-#....S3. Pines ####
-png("figures/S3_pine_mass_loss_comparison.png",
-    width=3000,height=1900,res=300)
-ggplot(ML_com,aes(mean_pro_ML,Carbon_por,color=months)) +
+#....Fig 7. Pines ####
+png("figures/Fig7_pine_mass_loss_comparison.png",
+    width=3000,height=2000,res=300)
+ggplot(ML_com_t,aes(mean_pro_ML,Carbon_por,
+                    color=termite.attack,label=months)) +
   geom_abline(intercept=0, slope=1) +
   geom_point(size=2.2,alpha=0.95,shape=17) +
   geom_errorbarh(mapping=aes(xmin=mean_pro_ML-se_pro_ML,
                              xmax=mean_pro_ML+se_pro_ML,
-                             color=months),
+                             color=termite.attack),
                  alpha=0.85) +
-  scale_color_gradient(low="#a2b3ba",high="#2c3133") +
+  #geom_text(nudge_y=0.08) +
+  #scale_color_gradient(low="#a2b3ba",high="#2c3133") +
+  scale_color_manual(name="Termite discovery",
+                     values=c("gray30","salmon")) +
   facet_wrap(~fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")) +
   xlab("Carbon Loss (g/g/hr)") +
   ylab("Carbon Flux (g/g/hr)") +
   xlim(0,1) + ylim(0,1) +
-  fig_aes
+  fig_aes +
+  theme(legend.position = "top")
 dev.off()
 
-#....Fig 7. Natives ####
+
+
+# Natives
 ML_natives <- native_flux %>%
   filter(!is.na(pro.mass.loss)) %>%
-  group_by(site,months,Species.Code) %>%
+  group_by(site,months,Species.Code,termite.attack) %>%
   summarize(mean_pro_ML = mean(pro.mass.loss,na.rm=TRUE),
             sd_pro_ML = sd(pro.mass.loss,na.rm=TRUE),
             n = n()) %>%
@@ -318,12 +321,16 @@ ML_natives <- native_flux %>%
   left_join(int_mass_loss,by=c("site","months")) %>%
   mutate(mean_pro_ML = round(mean_pro_ML,2),
          sd_pro_ML = round(sd_pro_ML,2),
-         Carbon_por = round(Carbon_por,2)) %>%
+         Carbon_por = round(Carbon_por,2),
+         termite.attack = ifelse(termite.attack==1,"Yes","No")) %>%
+  filter(!is.na(termite.attack)) %>%
   mutate(months = as.character(months))
 
-png("figures/Fig7_native_mass_loss_comparison.png",
-    width=3000,height=1500,res=300)
-ggplot(ML_natives,aes(mean_pro_ML,Carbon_por,color=Species.Code)) +
+#....Fig 8. Natives ####
+png("figures/Fig8_native_mass_loss_comparison.png",
+    width=3000,height=1600,res=300)
+ggplot(ML_natives,aes(mean_pro_ML,Carbon_por,
+                      color=Species.Code, shape=termite.attack)) +
   geom_abline(intercept=0,slope=1) +
   geom_point(alpha=0.80,size=2.2) +
   geom_errorbarh(mapping=aes(xmin=mean_pro_ML-se_pro_ML,
@@ -332,6 +339,8 @@ ggplot(ML_natives,aes(mean_pro_ML,Carbon_por,color=Species.Code)) +
                  alpha=0.60) +
   scale_color_manual(values=p_all_sp,
                      name="Species") +
+  scale_shape_manual(name="Termite discovery",
+                     values=c(19,1)) +
   facet_wrap(~site) +
   xlab("Carbon Loss (g/g/hr)") +
   ylab("Carbon Flux (g/g/hr)") +
@@ -343,8 +352,7 @@ dev.off()
 
 ########## Supplementary Figures ##########
 
-#..FMC mechanistic model ####
-#......S1. FMC stick observations and calibration ####
+#......S2. FMC stick observations and calibration ####
 FMC_m <- wthr_FMC %>%
   select(site,date,FMC_norm) %>%
   left_join(filter(FMC_sim_p,var=="fuel_stick"),
@@ -354,7 +362,7 @@ FMC_m <- wthr_FMC %>%
   mutate(Stuck_FMC = ifelse(Stick_FMC=="FMC_norm",
                         "Measurements","Simulations"))
 
-png("figures/S1_stick_FMC.png",width=3000,height=2000,res=300)
+png("figures/S2_stick_FMC.png",width=3000,height=2000,res=300)
 ggplot(FMC_m,aes(date,FMC,color=Stick_FMC)) +
   geom_line(alpha=0.5) +
   scale_color_manual(values=c(p_stick,p_WTF),
@@ -369,7 +377,7 @@ dev.off()
 
 
 
-#......Block simulations + field points ####
+#......S3. Block simulations + field points ####
 library(googledrive)
 library(googlesheets4)
 # Get sheet with times and pine block dry weight
@@ -397,7 +405,7 @@ block_FMC <- pine_flux %>%
   rbind(FMC_cal2) %>%
   filter(site!="HQ_AWC")
 
-png("figures/S2_block_FMC.png",width=3000,height=2000,res=300)
+png("figures/S3_block_FMC.png",width=3000,height=2000,res=300)
 ggplot() +
   geom_line(data=FMC_sim,mapping=aes(date,fuel_block),
             alpha=0.5,color=p_block) +
@@ -407,192 +415,5 @@ ggplot() +
   facet_wrap(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) +
   fig_aes
 dev.off()
-
-#..Weather data ####
-#......Gap-filled weather data ####
-pdf(file="figures/S_wthr_gap_filled.pdf",width=11,height=8.5)
-ggplot(wthr_FMC,aes(date,AirTC_Avg,color=AirTC_source)) + 
-  geom_point(alpha=0.3,size=0.3) + 
-  scale_color_manual(values=c(p_POWER,p_WTF)) + 
-  xlab("Date") + ylab("Air temperature (C)") +
-  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) +
-  fig_aes
-ggplot(wthr_FMC,aes(date,ib_AirTC_Avg,color=ib_source)) + 
-  geom_point(alpha=0.3,size=0.3) + 
-  scale_color_manual(values=c(p_calc,p_WTF)) +
-  xlab("Date") + ylab("ibutton Air temperature (C)") +
-  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) +
-  fig_aes
-ggplot() + 
-  geom_point(data=wthr_FMC,
-             aes(date,Rain_mm_Tot,color=Rain_source),alpha=0.3,size=0.3) + 
-  scale_color_manual(values=c(p_CHRS,p_POWER,p_WTF)) +
-  geom_point(data=filter(wthr_FMC,Rain_source=="NASA_POWER"),
-             aes(date,Rain_mm_Tot),alpha=0.3,size=0.3,color=p_POWER) +
-  xlab("Date") + ylab("Rainfall (mm/hr)") +
-  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) +
-  fig_aes
-ggplot(wthr_FMC,aes(date,BP_mbar_Avg,color=BP_source)) + 
-  geom_point(alpha=0.3,size=0.3) + 
-  scale_color_manual(values=c(p_POWER,p_WTF)) +
-  xlab("Date") + ylab("Barometric pressure (mbar)") +
-  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) +
-  fig_aes
-ggplot(wthr_FMC,aes(date,RH_Avg,color=RH_source)) + 
-  geom_point(alpha=0.3,size=0.3) + 
-  scale_color_manual(values=c(p_POWER,p_WTF)) +
-  xlab("Date") + ylab("Relative humidity (%)") +
-  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) +
-  fig_aes
-ggplot(wthr_FMC,aes(date,WS2M)) + 
-  geom_point(alpha=0.3,size=0.3,color=p_POWER) + 
-  xlab("Date") + ylab("Wind speed (m/s)") +
-  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) +
-  fig_aes
-ggplot(wthr_FMC,aes(date,ALLSKY_SFC_SW_DWN)) + 
-  geom_point(alpha=0.3,size=0.3,color=p_POWER) + 
-  xlab("Date") + ylab("Shortwave radiation (W/m^2)") +
-  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) +
-  fig_aes
-ggplot(wthr_FMC,aes(date,ALLSKY_SFC_LW_DWN)) + 
-  geom_point(alpha=0.3,size=0.3,color=p_POWER) + 
-  xlab("Date") + ylab("Longwave radiation (W/m^2)") +
-  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) +
-  fig_aes
-ggplot(wthr_FMC,aes(date,solar_elevation)) + 
-  geom_point(alpha=0.3,size=0.3,color=p_POWER) + 
-  xlab("Date") + ylab("Solar elevation (degrees)") +
-  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) +
-  fig_aes
-ggplot(wthr_FMC,aes(date,solar_azimuth)) + 
-  geom_point(alpha=0.3,size=0.3,color=p_calc) + 
-  xlab("Date") + ylab("Solar azimuth (degrees)") +
-  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) +
-  fig_aes
-ggplot(wthr_FMC,aes(date,FMC_norm)) + 
-  geom_point(alpha=0.3,size=0.3,color=p_WTF) + 
-  xlab("Date") + ylab("Fuel moisture content, normalized (%)") +
-  facet_grid(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) +
-  fig_aes
-dev.off()
-
-
-
-# Scratch ####
-#..FMC stick v block: Simulations only ####
-png("figures/Fig_FMC_cal_sim.png",width=2500,height=1500,res=250)
-ggplot(FMC_sim_p,aes(date,FMC,color=Model)) + 
-  geom_line(alpha=0.5) +
-  scale_color_manual(values=c(p_block,p_stick)) +
-  geom_line(data=FMC_sim,mapping=aes(date,fuel_block),
-            alpha=0.3,color=p_block) +
-  xlab("Date") + ylab("FMC (%)") +
-  facet_wrap(~fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")) +
-  fig_aes
-dev.off()
-
-#..Fig 4 DRO and PNW only ####
-png("figures/Fig_FMC_cal_sim_rain_DP.png",width=2500,height=1200,res=250)
-ggplot() + 
-  geom_line(data=filter(FMC_sim_p,site%in%c("DRO","PNW")),
-            mapping=aes(date,FMC,color=Model),
-            alpha=0.5) +
-  scale_color_manual(values=c(p_block,p_stick)) +
-  geom_bar(data=filter(wthr_FMC,site%in%c("DRO","PNW")),
-           mapping=aes(date,Rain_mm_Tot),
-           stat="identity",color="blue") +
-  geom_line(data=filter(FMC_sim,site%in%c("DRO","PNW")),
-            mapping=aes(date,fuel_block),
-            alpha=0.5,color=p_block) +
-  xlab("Date") + 
-  scale_y_continuous(name="FMC (%)",
-                     sec.axis=sec_axis(~.,name="Rainfall (mm/hr)")) +
-  facet_wrap(~site) +
-  fig_aes
-dev.off()
-
-#......DRO and PNW only ####
-png("figures/Fig_CO2_time_DP.png",width=2500,height=1200,res=250)
-ggplot(filter(time_flux2,site%in%c("DRO","PNW"))) +
-  geom_line(mapping=aes(date,Estimate,color=site),alpha=0.5) +
-  geom_ribbon(mapping=aes(x=date,y=Estimate,ymin=Q2.5,ymax=Q97.5,
-                          fill=site),
-              alpha=0.3,color=NA) +
-  scale_color_manual(name="Site",values=c(p_DRO,p_PNW)) +
-  scale_fill_manual(name="Site",values=c(p_DRO,p_PNW)) +
-  xlab("Date") + ylab("CO2 Flux (ug CO2/s/g)") +
-  facet_grid(~site) +
-  fig_aes
-dev.off()
-
-#..Natives + BM only ####
-png("figures/S_BM_natives.png",width=2500,height=1000,res=250)
-plot_grid(b1,b2,
-          nrow=1,ncol=2,
-          labels=c("A","B"))
-dev.off()
-
-#..Natives + Simulations only ####
-png("figures/Fig_native_FMC_flux.png",width=2500,height=1000,res=250)
-plot_grid(d1,d2,
-          nrow=1,ncol=2,
-          labels=c("A","B"))
-dev.off()
-
-#..Pine flux vs. mass loss including termite activity ####
-ML_com_t <- pine_flux %>%
-  mutate(pro.mass.loss = 1 - harvest_dry_wt/init_dry_wt) %>%
-  filter(!is.na(pro.mass.loss)) %>%
-  group_by(site,months,termite.attack) %>%
-  summarize(mean_pro_ML = mean(pro.mass.loss),
-            sd_pro_ML = sd(pro.mass.loss),
-            n = n()) %>%
-  mutate(n = as.numeric(n),
-         se_pro_ML = sd_pro_ML/sqrt(n)) %>%
-  right_join(int_mass_loss,by=c("site","months")) %>%
-  mutate(mass_to_flux = (Carbon_por/mean_pro_ML)*100,
-         mean_pro_ML = round(mean_pro_ML,2),
-         sd_pro_ML = round(sd_pro_ML,2),
-         Carbon_por = round(Carbon_por,2),
-         termite.attack = ifelse(termite.attack==1,"Yes","No")) %>%
-  filter(!is.na(termite.attack))
-
-png("figures/S3.5_pine_mass_loss_comparison.png",
-    width=3000,height=2000,res=300)
-ggplot(ML_com_t,aes(mean_pro_ML,Carbon_por,
-                    color=termite.attack,label=months)) +
-  geom_abline(intercept=0, slope=1) +
-  geom_point(size=2.2,alpha=0.95,shape=17) +
-  geom_errorbarh(mapping=aes(xmin=mean_pro_ML-se_pro_ML,
-                             xmax=mean_pro_ML+se_pro_ML,
-                             color=termite.attack),
-                 alpha=0.85) +
-  #geom_text(nudge_y=0.08) +
-  #scale_color_gradient(low="#a2b3ba",high="#2c3133") +
-  scale_color_manual(name="Termite discovery",
-                     values=c("gray30","salmon")) +
-  facet_wrap(~fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")) +
-  xlab("Carbon Loss (g/g/hr)") +
-  ylab("Carbon Flux (g/g/hr)") +
-  xlim(0,1) + ylim(0,1) +
-  fig_aes +
-  theme(legend.position = "top")
-dev.off()
-
-
-#..Proportion mass loss to flux ####
-site.order <- c("DRO","MLRF","MLES","STCK","PNW")
-ML_com_t$site <- factor(ML_com_t$site, levels = site.order)
-
-ggplot(ML_com_t, aes(site, mass_to_flux, color=termite.attack)) +
-  geom_boxplot() +
-  scale_color_manual(name="Termite discovery",
-                     values=c("gray30","salmon")) +
-  xlab("Site") +
-  ylab("Percent Carbon flux per unit mass loss") +
-  fig_aes +
-  theme(legend.position = "top")
-  
-
 
 

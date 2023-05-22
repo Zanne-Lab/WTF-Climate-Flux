@@ -36,13 +36,32 @@ m1 <- brm(CO2_resp_rate ~ FMC_nor + (1|site),
 summary(m1)
 m1$fit
 
+# Figure aesthetics for uncertainty plots
+library(cowplot)
+fig_aes <- theme_bw() +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        strip.background =element_rect(fill="gray95"))
+
 # Posterior predictive check
-pp_check(m1,ndraws=100)
-pp_check(m1, type = "scatter_avg_grouped", group = "site") + 
+p1 <- pp_check(m1,ndraws=100) + 
+  fig_aes +
+  theme(legend.position = c(0.8,0.8))
+
+p2 <- pp_check(m1, type = "scatter_avg_grouped", group = "site") + 
   geom_abline(intercept = 0, slope = 1 , color = "red", lty = 2)
+
+png("figures/S1_BM_pp.png",width=3000,height=1500,res=180)
+plot_grid(p1,p2,
+          ncol=2,nrow=1,labels=c("A","B"))
+dev.off()
 
 # Check MCMC chain
 plot(m1)
+
+png("figures/S1_BM_MCMC.png",width=3000,height=1800,res=250)
+plot(m1)
+dev.off()
 
 # Information criteria
 loo_m1 = loo(m1)
@@ -58,6 +77,7 @@ me_fit <- conditional_effects(m1, conditions = conditions,
                               re_formula = NULL, method = "predict")
 
 plot(me_fit, ncol = 5, points = TRUE)
+
 plot(me_fit, plot = FALSE)[[1]] + facet_wrap(~site)
 
 bm_fits <- me_fit[[1]] %>%

@@ -219,7 +219,8 @@ weights_all_c <- weights_all %>%
   filter(Species.Code=="PIRA") %>%
   mutate(Sawdust_FW = ifelse(Sawdust_FW==0,NA,Sawdust_FW)) %>%
   mutate(harvest_dry_wt = ifelse(is.na(Post_drill_FW),DW_Wood,FW_Wood*dry.wet)) %>%
-  mutate(mass.loss = init_dry_wt - harvest_dry_wt) %>%
+  mutate(mass.loss = init_dry_wt - harvest_dry_wt,
+         pro.mass.loss = ((init_dry_wt-harvest_dry_wt)/init_dry_wt)) %>%
   rbind(filter(weights_all,Species.Code!="PIRA"))
 
 # Calculate proportion of sample that was wood
@@ -311,14 +312,15 @@ resp_all <- weights_all3 %>%
 # Temp conversion to kelvin: T = Tc + Ti; Ti = 273.15
 # Pi (standard pressure) = 1013.25 mbar 
 # Vi (standard volume) = 22.4 L
-# collar = 5 or 9 cm, offset = 1 cm, diameter collar = 4.5 cm, volume chamber = 4076.1 cm^3
-# Vc (volume of chamber) = (((collar-1)*4.5^2*pi) + 4076.1)/1000 
+# collar height = 5 or 9 cm, offset = 1 cm 
+# collar area = 317.8 cm^2, chamber volume = 4076.1 cm^3
+# Vc (volume of chamber) = (((collar-1)*317.8) + 4076.1)/1000 L
 # MCO2 (molar mass CO2) = 44.01
 # MCH4 (molar mass CH4) = 16.04
 
 CO2_resp<-function(deltaCO2,Tc,Vs,Ws,P,collar){ 
   Pi=1013.25
-  Vc=(((collar-1)*4.5^2*pi) + 4076.1)/1000 
+  Vc=(((collar-1)*317.8) + 4076.1)/1000 
   Vi=22.4
   Ti=273.15
   MCO2=44.01
@@ -328,7 +330,7 @@ CO2_resp<-function(deltaCO2,Tc,Vs,Ws,P,collar){
 
 CH4_resp<-function(deltaCH4,Tc,Vs,Ws,P,collar){ 
   Pi=1013.25
-  Vc=(((collar-1)*4.5^2*pi) + 4076.1)/1000 
+  Vc=(((collar-1)*317.8) + 4076.1)/1000 
   Vi=22.4
   Ti=273.15
   MCH4=16.04
@@ -336,12 +338,13 @@ CH4_resp<-function(deltaCH4,Tc,Vs,Ws,P,collar){
   return(resp)
 }
 
-# Calculate flux and fuel moisture content
+# Calculate flux and FMC
 resp_out <- resp_all %>%
   mutate(CO2_resp_rate=CO2_resp(deltaCO2=deltaCO2,Tc=mean_Tcham,Vs=fresh_volume,
                                 Ws=resp_dry_wt,P=mean_Pressure,collar=Collar),
          CH4_resp_rate=CH4_resp(deltaCH4=deltaCH4,Tc=mean_Tcham,Vs=fresh_volume,
-                                Ws=resp_dry_wt,P=mean_Pressure,collar=Collar))
+                                Ws=resp_dry_wt,P=mean_Pressure,collar=Collar)) %>%
+  mutate(FMC = ((FW_Wood-harvest_dry_wt)/harvest_dry_wt)*100)
 
 # Save data
 write_csv(resp_out,"data/processed/wood_respiration/wood_respiration_rates.csv")
@@ -408,34 +411,31 @@ for(x in 1:length(seq3)){
 }
 dev.off()
 
-# Calculate FMC
-resp_CF_o3 <- resp_CF_o %>%
-  mutate(FMC = ((FW_Wood-harvest_dry_wt)/harvest_dry_wt)*100)
-# Negative FMC values are likely 0. They will be removed from analysis.
 
 # Save final files
-resp_pine_CO2 <- resp_CF_o3 %>%
+# Negative FMC values are likely 0. They will be removed from analysis.
+resp_pine_CO2 <- resp_CF_o %>%
   filter(Species.Code=="PIRA") %>%
   filter(CO2_resp_outlier == "No") %>%
   filter(FMC > 0) %>%
   filter(!is.na(CO2_resp_rate)) %>%
   write_csv("data/processed/wood_respiration/pine_CO2_clean.csv")
   
-resp_pine_CH4 <- resp_CF_o3 %>%
+resp_pine_CH4 <- resp_CF_o %>%
   filter(Species.Code=="PIRA") %>%
   filter(CH4_resp_outlier == "No") %>%
   filter(FMC > 0) %>%
   filter(!is.na(CH4_resp_rate)) %>%
   write_csv("data/processed/wood_respiration/pine_CH4_clean.csv")
 
-resp_native_CO2 <- resp_CF_o3 %>%
+resp_native_CO2 <- resp_CF_o %>%
   filter(Species.Code!="PIRA") %>%
   filter(CO2_resp_outlier == "No") %>%
   filter(FMC > 0) %>%
   filter(!is.na(CO2_resp_rate)) %>%
   write_csv("data/processed/wood_respiration/native_CO2_clean.csv")
 
-resp_native_CH4 <- resp_CF_o3 %>%
+resp_native_CH4 <- resp_CF_o %>%
   filter(Species.Code!="PIRA") %>%
   filter(CH4_resp_outlier == "No") %>%
   filter(FMC > 0) %>%
