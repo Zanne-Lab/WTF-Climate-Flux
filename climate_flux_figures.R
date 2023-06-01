@@ -10,19 +10,49 @@ library(zoo)
 library(cowplot)
 
 ########## Load in data ##########
-wthr_FMC <- read_csv("weather_flux/data/processed/weather_stations/wthr_1hr_FMC.csv")
+# Add site descriptions
+wthr_FMC <- read_csv("weather_flux/data/processed/weather_stations/wthr_1hr_FMC.csv") %>%
+  mutate(site_desc = case_when(site=="DRO" ~ "Wet rainforest",
+                               site=="MLRF" ~ "Dry rainforest",
+                               site=="MLES" ~ "Sclerophyll",
+                               site=="STCK" ~ "Wet savanna",
+                               site=="PNW" ~ "Dry savanna"))
 pine_flux <- read_csv("weather_flux/data/processed/wood_respiration/pine_CO2_clean.csv") %>%
-  filter(CO2_resp_rate > 0)
-native_flux <- read_csv("weather_flux/data/processed/wood_respiration/native_CO2_clean.csv")
-bm_fits <- read_csv("bayesian_model/bm_fits.csv")
-FMC_sim <- read_csv("FMC_mechanistic_model/fuel_moisture_output_rf.csv")
-time_flux <- read_csv("bayesian_model/FMC_pred.csv") %>%
-  separate(1,into=c("Estimate","Est.Error","Q2.5","Q97.5"),sep=",") %>%
-  mutate_at(c("Estimate","Est.Error","Q2.5","Q97.5"),as.numeric)
-int_mass_loss <- read_csv("mass_loss.csv") %>%
-  separate(1,into=c("site","months","Carbon_por"),sep=",") %>%
+  filter(CO2_resp_rate > 0) %>%
+  mutate(site_desc = case_when(site=="DRO" ~ "Wet rainforest",
+                               site=="MLRF" ~ "Dry rainforest",
+                               site=="MLES" ~ "Sclerophyll",
+                               site=="STCK" ~ "Wet savanna",
+                               site=="PNW" ~ "Dry savanna"))
+native_flux <- read_csv("weather_flux/data/processed/wood_respiration/native_CO2_clean.csv") %>%
+  mutate(site_desc = case_when(site=="DRO" ~ "Wet rainforest",
+                               site=="PNW" ~ "Dry savanna"))
+bm_fits <- read_csv("bayesian_model/bm_fits.csv") %>%
+  mutate(site_desc = case_when(site=="DRO" ~ "Wet rainforest",
+                               site=="MLRF" ~ "Dry rainforest",
+                               site=="MLES" ~ "Sclerophyll",
+                               site=="STCK" ~ "Wet savanna",
+                               site=="PNW" ~ "Dry savanna"))
+FMC_sim <- read_csv("FMC_mechanistic_model/fuel_moisture_output_rf.csv") %>%
+  mutate(site_desc = case_when(site=="DRO" ~ "Wet rainforest",
+                               site=="MLRF" ~ "Dry rainforest",
+                               site=="MLES" ~ "Sclerophyll",
+                               site=="STCK" ~ "Wet savanna",
+                               site=="PNW" ~ "Dry savanna"))
+time_flux <- read_csv("bayesian_model/pred.2_2000.csv") %>%
+  #separate(1,into=c("Estimate","Est.Error","Q2.5","Q97.5"),sep=",") %>%
+  mutate_at(c("Estimate","Est.Error","Q2.5","Q97.5"),as.numeric) 
+int_mass_loss <- read_csv("mass_los.csv") %>%
+  #separate(1,into=c("site","months","Carbon_por"),sep=",") %>%
+  rename(months = Months,
+         Carbon_por = V3) %>%
   mutate_at(c("site"),as.character) %>%
-  mutate_at(c("months","Carbon_por"),as.numeric)
+  mutate_at(c("months","Carbon_por"),as.numeric) %>%
+  mutate(site_desc = case_when(site=="DRO" ~ "Wet rainforest",
+                               site=="MLRF" ~ "Dry rainforest",
+                               site=="MLES" ~ "Sclerophyll",
+                               site=="STCK" ~ "Wet savanna",
+                               site=="PNW" ~ "Dry savanna"))
 
 # HQ_AWC is removed from plotting as it was not used in analysis
 
@@ -35,8 +65,6 @@ library(palettetown)
 p_site <- pokepal(254,5)
 p_DRO <- p_site[1]
 p_PNW <- p_site[4]
-p_site_a <- c(p_site[1],p_site[3],p_site[2],p_site[5],p_site[4])
-p_site_strip <- strip_themed(background_x = elem_list_rect(fill = p_site_a))
 
 
 # Species palettes
@@ -56,11 +84,11 @@ p_PNW_sp_all <- c("#D8C088","#F8E0A8","#B09860","#686868","#685820",
 p_all_sp <- c(p_DRO_sp,p_PNW_sp)
 
 # Colors for weather plots
-p_WTF <- "#7870C8"
+p_WTF <- "#303088"
 p_POWER <- "#A84890"
 p_CHRS <- "#680850"
 p_SILO <- "#333333"
-p_calc <- "#303088"
+p_calc <- "#7870C8"
 
 # Colors for simulation plots
 p_stick <- "#709890"
@@ -83,7 +111,9 @@ bm <- ggplot() +
   geom_ribbon(bm_fits,mapping=aes(x=effect1__,y=estimate__,
                                   ymin=lower__,ymax=upper__,fill=site),
               alpha=0.2,color=NA) +
-  facet_wrap(~fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")) +
+  facet_wrap(~fct_relevel(site_desc,"Wet rainforest",
+                          "Dry rainforest","Sclerophyll",
+                          "Wet savanna","Dry savanna")) +
   scale_fill_manual(name="Site",values=p_site) +
   xlab("FMC (%)") + ylab("CO2 Flux (ug CO2/s/g)") + 
   fig_aes
@@ -100,7 +130,7 @@ dev.off()
 #..Fig 4. FMC stick calibration vs. block simulations ####
 FMC_sim_p <- FMC_sim %>%
   select(-FMC_nor) %>%
-  pivot_longer(!c(date,site),names_to="var",values_to="FMC") %>%
+  pivot_longer(!c(date,site,site_desc),names_to="var",values_to="FMC") %>%
   mutate(Model = ifelse(var=="fuel_stick",
                             "Stick FMC","Block Moisture Content"))
 
@@ -117,7 +147,9 @@ ggplot() +
   xlab("Date") + 
   scale_y_continuous(name="FMC (%)",
                      sec.axis=sec_axis(~.,name="Rainfall (mm/hr)")) +
-  facet_wrap(~fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")) +
+  facet_wrap(~fct_relevel(site_desc,"Wet rainforest",
+                          "Dry rainforest","Sclerophyll",
+                          "Wet savanna","Dry savanna")) +
   fig_aes +
   theme(legend.position = "top")
 dev.off()
@@ -126,6 +158,7 @@ dev.off()
 
 #..Fig 5. Time-resolved CO2 Flux ####
 time_flux2 <- data.frame(site = wthr_FMC$site,
+                         site_desc = wthr_FMC$site_desc,
                          date = wthr_FMC$date,
                          Estimate = time_flux$Estimate,
                          Est.Error = time_flux$Est.Error,
@@ -141,15 +174,31 @@ ggplot(time_flux2) +
   scale_color_manual(name="Site",values=p_site) +
   scale_fill_manual(name="Site",values=p_site) +
   xlab("Date") + ylab("CO2 Flux (ug CO2/s/g)") +
-  facet_wrap(~fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")) +
+  facet_wrap(~fct_relevel(site_desc,"Wet rainforest",
+                          "Dry rainforest","Sclerophyll",
+                          "Wet savanna","Dry savanna")) +
+  fig_aes +
+  guides(color=FALSE, fill=FALSE)
+dev.off()
+
+#....Fig 5. no uncertainty ####
+png("figures/Fig5.1_CO2_time.png",width=3000,height=2000,res=300)
+ggplot(time_flux2) +
+  geom_line(mapping=aes(date,Estimate,color=site),alpha=0.5) +
+  scale_color_manual(name="Site",values=p_site) +
+  scale_fill_manual(name="Site",values=p_site) +
+  xlab("Date") + ylab("CO2 Flux (ug CO2/s/g)") +
+  facet_wrap(~fct_relevel(site_desc,"Wet rainforest",
+                          "Dry rainforest","Sclerophyll",
+                          "Wet savanna","Dry savanna")) +
   fig_aes +
   guides(color=FALSE, fill=FALSE)
 dev.off()
 
 
-
 #..Natives and FMC/Flux Simulations ####
 sim_flux <- data.frame(site = FMC_sim$site,
+                       site_desc = FMC_sim$site_desc,
                        Block_FMC = FMC_sim$fuel_block,
                        Sim_CO2 = time_flux$Estimate,
                        Sim_Q2.5 = time_flux$Q2.5,
@@ -270,13 +319,13 @@ dev.off()
 #..Flux vs. mass loss ####
 ML_com_t <- pine_flux %>%
   filter(!is.na(pro.mass.loss)) %>%
-  group_by(site,months,termite.attack) %>%
+  group_by(site,site_desc,months,termite.attack) %>%
   summarize(mean_pro_ML = mean(pro.mass.loss),
             sd_pro_ML = sd(pro.mass.loss),
             n = n()) %>%
   mutate(n = as.numeric(n),
          se_pro_ML = sd_pro_ML/sqrt(n)) %>%
-  right_join(int_mass_loss,by=c("site","months")) %>%
+  right_join(int_mass_loss,by=c("site","site_desc","months")) %>%
   mutate(mass_to_flux = (Carbon_por/mean_pro_ML)*100,
          mean_pro_ML = round(mean_pro_ML,2),
          sd_pro_ML = round(sd_pro_ML,2),
@@ -299,7 +348,9 @@ ggplot(ML_com_t,aes(mean_pro_ML,Carbon_por,
   #scale_color_gradient(low="#a2b3ba",high="#2c3133") +
   scale_color_manual(name="Termite discovery",
                      values=c("gray30","salmon")) +
-  facet_wrap(~fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")) +
+  facet_wrap(~fct_relevel(site_desc,"Wet rainforest",
+                          "Dry rainforest","Sclerophyll",
+                          "Wet savanna","Dry savanna")) +
   xlab("Carbon Loss (g/g/hr)") +
   ylab("Carbon Flux (g/g/hr)") +
   xlim(0,1) + ylim(0,1) +
@@ -312,13 +363,13 @@ dev.off()
 # Natives
 ML_natives <- native_flux %>%
   filter(!is.na(pro.mass.loss)) %>%
-  group_by(site,months,Species.Code,termite.attack) %>%
+  group_by(site,site_desc,months,Species.Code,termite.attack) %>%
   summarize(mean_pro_ML = mean(pro.mass.loss,na.rm=TRUE),
             sd_pro_ML = sd(pro.mass.loss,na.rm=TRUE),
             n = n()) %>%
   mutate(n = as.numeric(n),
          se_pro_ML = sd_pro_ML/sqrt(n)) %>%
-  left_join(int_mass_loss,by=c("site","months")) %>%
+  left_join(int_mass_loss,by=c("site","site_desc","months")) %>%
   mutate(mean_pro_ML = round(mean_pro_ML,2),
          sd_pro_ML = round(sd_pro_ML,2),
          Carbon_por = round(Carbon_por,2),
@@ -328,7 +379,7 @@ ML_natives <- native_flux %>%
 
 #....Fig 8. Natives ####
 png("figures/Fig8_native_mass_loss_comparison.png",
-    width=3000,height=1600,res=300)
+    width=3200,height=1600,res=300)
 ggplot(ML_natives,aes(mean_pro_ML,Carbon_por,
                       color=Species.Code, shape=termite.attack)) +
   geom_abline(intercept=0,slope=1) +
@@ -340,8 +391,8 @@ ggplot(ML_natives,aes(mean_pro_ML,Carbon_por,
   scale_color_manual(values=p_all_sp,
                      name="Species") +
   scale_shape_manual(name="Termite discovery",
-                     values=c(19,1)) +
-  facet_wrap(~site) +
+                     values=c(16,9)) +
+  facet_wrap(~fct_relevel(site_desc,"Wet rainforest","Dry savanna")) +
   xlab("Carbon Loss (g/g/hr)") +
   ylab("Carbon Flux (g/g/hr)") +
   xlim(0,1) + ylim(0,1) +
@@ -354,11 +405,11 @@ dev.off()
 
 #......S2. FMC stick observations and calibration ####
 FMC_m <- wthr_FMC %>%
-  select(site,date,FMC_norm) %>%
+  select(site,site_desc,date,FMC_norm) %>%
   left_join(filter(FMC_sim_p,var=="fuel_stick"),
-            by=c("site","date")) %>%
+            by=c("site","site_desc","date")) %>%
   select(-Model,-var) %>%
-  pivot_longer(!c(date,site),names_to="Stick_FMC",values_to="FMC") %>%
+  pivot_longer(!c(date,site,site_desc),names_to="Stick_FMC",values_to="FMC") %>%
   mutate(Stuck_FMC = ifelse(Stick_FMC=="FMC_norm",
                         "Measurements","Simulations"))
 
@@ -370,7 +421,9 @@ ggplot(FMC_m,aes(date,FMC,color=Stick_FMC)) +
                      labels=c("Model Calibrations",
                               "Measurements (normalized)")) +
   xlab("Date") + ylab("Fuel moisture content (%)") +
-  facet_wrap(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) +
+  facet_wrap(~fct_relevel(site_desc,"Wet rainforest",
+                          "Dry rainforest","Sclerophyll",
+                          "Wet savanna","Dry savanna")) +
   fig_aes +
   theme(legend.position = "top")
 dev.off()
@@ -395,11 +448,16 @@ FMC_cal2 <- FMC_cal %>%
          site = case_when(site == "awc_hq" ~ "HQ_AWC", site == "dro" ~ "DRO",
                           site == "mtlwrf" ~ "MLRF", site == "mtlwsc" ~ "MLES",
                           site == "pnw" ~ "PNW", site == "stck" ~ "STCK")) %>%
-  select(site,date,FMC)
+  select(site,date,FMC) %>%
+  mutate(site_desc = case_when(site=="DRO" ~ "Wet rainforest",
+                               site=="MLRF" ~ "Dry rainforest",
+                               site=="MLES" ~ "Sclerophyll",
+                               site=="STCK" ~ "Wet savanna",
+                               site=="PNW" ~ "Dry savanna"))
 
 block_FMC <- pine_flux %>%
   mutate(date = as_datetime(paste(harvest_date,"12:00:00"))) %>%
-  group_by(site,date) %>%
+  group_by(site,site_desc,date) %>%
   summarize(FMC = mean(FMC,na.rm=TRUE),
             sd_FMC = sd(FMC,na.rm=TRUE)) %>%
   rbind(FMC_cal2) %>%
@@ -412,7 +470,9 @@ ggplot() +
   geom_point(data=block_FMC,mapping=aes(date,FMC),
              color=p_pira,shape=17,size=1.8) +
   xlab("Date") + ylab("Fuel moisture content (%)") +
-  facet_wrap(fct_relevel(site,"DRO","MLRF","MLES","STCK","PNW")~.) +
+  facet_wrap(fct_relevel(site_desc,"Wet rainforest",
+                         "Dry rainforest","Sclerophyll",
+                         "Wet savanna","Dry savanna")~.) +
   fig_aes
 dev.off()
 
