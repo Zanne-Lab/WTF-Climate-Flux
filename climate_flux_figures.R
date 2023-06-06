@@ -403,7 +403,33 @@ dev.off()
 
 ########## Supplementary Figures ##########
 
-#......S2. FMC stick observations and calibration ####
+#......S1. Flux samples removed ####
+check <- read_csv("weather_flux/data/processed/wood_respiration/cleaning_stats.csv")
+IRGA_ex <- read_csv("weather_flux/data/processed/wood_respiration/IRGA_ex.csv")
+
+# Proportions plot
+png("figures/S1_flux_cleaning.png",width=800,height=1000,res=250)
+ggplot(check, aes(fill=Data, y=Proportion, x=Dataset)) + 
+  geom_bar(position="fill", stat="identity") +
+  scale_fill_manual(name="Sample type",
+                    values=pokepal(9,3),
+                    labels=c("Low % wood","Nonsignificant fit","Kept")) +
+  fig_aes
+dev.off()
+
+png("figures/S1_flux_cleaning2.png",width=2200,height=1000,res=250)
+ggplot(IRGA_ex,aes(Etime,CO2d_ppm,color=CO2_resp_outlier)) +
+  geom_point(alpha=0.9,size=1.5) +
+  scale_color_manual(values=c(pokepal(9,3)[3],pokepal(9,3)[2])) +
+  facet_wrap(~SampleID, scales="free") +
+  xlab("Time (seconds)") + ylab("CO2 (ppm)") +
+  fig_aes +
+  theme(legend.position = "none")
+dev.off()
+
+
+
+#......S3. FMC stick observations and calibration ####
 FMC_m <- wthr_FMC %>%
   select(site,site_desc,date,FMC_norm) %>%
   left_join(filter(FMC_sim_p,var=="fuel_stick"),
@@ -413,7 +439,7 @@ FMC_m <- wthr_FMC %>%
   mutate(Stuck_FMC = ifelse(Stick_FMC=="FMC_norm",
                         "Measurements","Simulations"))
 
-png("figures/S2_stick_FMC.png",width=3000,height=2000,res=300)
+png("figures/S3_stick_FMC.png",width=3000,height=2000,res=300)
 ggplot(FMC_m,aes(date,FMC,color=Stick_FMC)) +
   geom_line(alpha=0.5) +
   scale_color_manual(values=c(p_stick,p_WTF),
@@ -430,7 +456,7 @@ dev.off()
 
 
 
-#......S3. Block simulations + field points ####
+#......S4. Block simulations + field points ####
 library(googledrive)
 library(googlesheets4)
 # Get sheet with times and pine block dry weight
@@ -463,7 +489,7 @@ block_FMC <- pine_flux %>%
   rbind(FMC_cal2) %>%
   filter(site!="HQ_AWC")
 
-png("figures/S3_block_FMC.png",width=3000,height=2000,res=300)
+png("figures/S4_block_FMC.png",width=3000,height=2000,res=300)
 ggplot() +
   geom_line(data=FMC_sim,mapping=aes(date,fuel_block),
             alpha=0.5,color=p_block) +

@@ -1,0 +1,343 @@
+site,SampleID,Species.Code,Etime,CO2d_ppm,CH4d_ppm,CO2_resp_outlier,CH4_resp_outlier
+DRO,523,CASU,0,468.8187,1.746893,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,1,468.5921,1.747472,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,2,468.8587,1.747007,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,3,468.605,1.746746,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,4,468.4682,1.745481,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,5,468.7141,1.745507,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,6,468.4115,1.746357,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,7,468.486,1.744587,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,8,468.2031,1.744905,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,9,468.7902,1.745333,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,10,468.4878,1.746682,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,11,468.5134,1.747435,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,12,468.9639,1.747826,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,13,468.4491,1.746626,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,14,468.6495,1.745665,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,15,468.3822,1.747126,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,16,468.4557,1.748019,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,17,468.5839,1.746062,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,18,467.9359,1.746999,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,19,468.684,1.747805,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,20,468.3612,1.746634,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,21,468.8884,1.746652,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,22,468.1957,1.745634,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,23,468.3253,1.746061,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,24,468.4746,1.745348,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,25,467.9853,1.746427,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,26,468.5745,1.747003,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,27,468.6068,1.746543,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,28,468.3574,1.744942,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,29,468.163,1.745216,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,30,468.4028,1.747018,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,31,468.3288,1.746554,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,32,468.6429,1.748603,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,33,468.563,1.745929,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,34,468.6713,1.747199,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,35,468.7832,1.746474,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,36,468.7724,1.747958,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,37,468.7003,1.747245,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,38,468.6833,1.747375,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,39,468.2095,1.745877,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,40,468.527,1.747784,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,41,468.496,1.746671,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,42,468.4971,1.745027,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,43,468.7573,1.746101,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,44,468.3342,1.746487,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,45,468.6802,1.746923,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,46,468.5719,1.746447,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,47,468.2842,1.745515,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,48,468.5629,1.746648,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,49,468.7285,1.747457,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,50,468.8383,1.746727,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,51,468.498,1.744754,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,52,468.3641,1.74613,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,53,468.3395,1.747987,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,54,468.2529,1.746719,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,55,468.6515,1.746642,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,56,468.343,1.746273,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,57,468.9842,1.748706,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,58,468.25,1.745885,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,59,468.715,1.745483,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,60,468.182,1.748345,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,61,468.3599,1.748448,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,62,468.2701,1.74569,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,63,468.3697,1.745037,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,64,468.379,1.74717,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,65,468.3319,1.748087,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,66,468.6803,1.744906,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,67,468.6428,1.745932,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,68,468.4272,1.745305,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,69,468.5602,1.748725,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,70,468.7462,1.745189,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,71,468.5316,1.745745,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,72,468.5098,1.746137,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,73,467.858,1.748866,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,74,468.6896,1.746572,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,75,468.1547,1.747204,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,76,468.5786,1.745487,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,77,468.5449,1.747862,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,78,468.6303,1.746747,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,79,468.3055,1.744582,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,80,468.1416,1.745802,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,81,468.5703,1.750076,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,82,468.2459,1.746419,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,83,468.5709,1.746882,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,84,468.6026,1.746306,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,85,468.425,1.747494,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,86,468.4999,1.748081,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,87,468.34,1.746814,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,88,468.2768,1.745554,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,89,468.3359,1.746053,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,90,468.1877,1.747798,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,91,468.3145,1.746161,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,92,468.3466,1.74651,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,93,468.6171,1.743252,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,94,468.7365,1.746396,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,95,468.5845,1.746561,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,96,469.047,1.74631,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,97,467.9859,1.745937,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,98,468.617,1.746258,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,99,468.3533,1.746117,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,100,468.5637,1.747908,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,101,468.8435,1.748221,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,102,468.477,1.747894,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,103,468.7885,1.745012,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,104,468.472,1.746943,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,105,468.5017,1.746025,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,106,468.527,1.74703,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,107,468.446,1.748058,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,108,468.8276,1.746916,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,109,468.2284,1.748382,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,110,468.7948,1.748267,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,111,468.383,1.745703,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,112,468.3993,1.746584,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,113,468.5522,1.746505,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,114,468.4565,1.746529,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,115,468.5313,1.746952,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,116,468.6326,1.746766,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,117,468.1909,1.747471,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,118,468.7445,1.746695,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,119,468.5187,1.746448,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,120,468.3205,1.745035,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,121,468.4261,1.74669,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,122,468.5747,1.747377,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,123,468.5037,1.748695,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,124,468.0864,1.747555,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,125,468.4161,1.74905,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,126,468.6456,1.747445,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,127,468.0768,1.745258,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,128,468.3343,1.747708,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,129,468.4949,1.746696,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,130,468.1965,1.746234,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,131,468.7012,1.748822,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,132,468.3937,1.74758,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,133,468.4352,1.745714,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,134,467.9493,1.747453,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,135,468.3398,1.747354,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,136,468.5624,1.747307,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,137,468.2365,1.747689,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,138,468.2022,1.746554,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,139,468.3154,1.745586,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,140,468.5188,1.746208,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,141,468.6052,1.746723,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,142,468.1149,1.7463089999999999,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,143,468.3559,1.745843,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,144,468.5799,1.744981,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,145,468.4561,1.746878,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,146,468.2688,1.746352,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,147,468.6015,1.746307,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,148,468.4339,1.745927,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,149,468.8616,1.747217,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,150,468.5036,1.746092,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,151,468.9698,1.74682,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,152,468.2037,1.747424,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,153,468.541,1.746488,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,154,468.5129,1.743618,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,155,468.3725,1.745815,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,156,468.5668,1.74666,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,157,468.3204,1.745924,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,158,468.6093,1.747625,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,159,468.5371,1.746509,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,160,468.2705,1.746153,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,161,468.6176,1.745313,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,162,468.5195,1.746005,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,163,468.7133,1.746645,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,164,468.7268,1.746534,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,165,468.4656,1.747398,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,166,469.0584,1.743435,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,167,468.7906,1.747386,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,168,468.3632,1.744917,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,169,467.9325,1.748182,nonsignificant fit,nonsignificant fit
+DRO,523,CASU,170,468.909,1.743699,nonsignificant fit,nonsignificant fit
+DRO,524,CASU,0,418.5081,1.753763,No,No
+DRO,524,CASU,1,418.2809,1.7502,No,No
+DRO,524,CASU,2,418.2317,1.751007,No,No
+DRO,524,CASU,3,418.2894,1.749611,No,No
+DRO,524,CASU,4,418.6549,1.752315,No,No
+DRO,524,CASU,5,418.8558,1.750822,No,No
+DRO,524,CASU,6,418.3168,1.751178,No,No
+DRO,524,CASU,7,418.4353,1.751839,No,No
+DRO,524,CASU,8,418.3667,1.750132,No,No
+DRO,524,CASU,9,418.3601,1.752679,No,No
+DRO,524,CASU,10,419.1131,1.751442,No,No
+DRO,524,CASU,11,418.4308,1.751536,No,No
+DRO,524,CASU,12,418.362,1.749775,No,No
+DRO,524,CASU,13,418.1398,1.751105,No,No
+DRO,524,CASU,14,418.4193,1.751174,No,No
+DRO,524,CASU,15,418.4853,1.751771,No,No
+DRO,524,CASU,16,418.6165,1.750673,No,No
+DRO,524,CASU,17,418.0344,1.75018,No,No
+DRO,524,CASU,18,418.4471,1.752799,No,No
+DRO,524,CASU,19,418.6129,1.753854,No,No
+DRO,524,CASU,20,418.8149,1.75136,No,No
+DRO,524,CASU,21,417.8797,1.751056,No,No
+DRO,524,CASU,22,418.6496,1.751747,No,No
+DRO,524,CASU,23,418.4394,1.754228,No,No
+DRO,524,CASU,24,418.4224,1.751301,No,No
+DRO,524,CASU,25,418.2316,1.751878,No,No
+DRO,524,CASU,26,418.9507,1.751797,No,No
+DRO,524,CASU,27,418.4507,1.75131,No,No
+DRO,524,CASU,28,418.7224,1.750924,No,No
+DRO,524,CASU,29,418.7688,1.753204,No,No
+DRO,524,CASU,30,418.3846,1.750932,No,No
+DRO,524,CASU,31,418.5339,1.749684,No,No
+DRO,524,CASU,32,418.4209,1.752691,No,No
+DRO,524,CASU,33,418.3314,1.752564,No,No
+DRO,524,CASU,34,419.0182,1.751958,No,No
+DRO,524,CASU,35,418.6206,1.751577,No,No
+DRO,524,CASU,36,418.7736,1.752743,No,No
+DRO,524,CASU,37,418.478,1.74893,No,No
+DRO,524,CASU,38,419.1023,1.752029,No,No
+DRO,524,CASU,39,418.307,1.751474,No,No
+DRO,524,CASU,40,418.9519,1.75258,No,No
+DRO,524,CASU,41,418.8651,1.751235,No,No
+DRO,524,CASU,42,418.8957,1.751417,No,No
+DRO,524,CASU,43,419.2476,1.752864,No,No
+DRO,524,CASU,44,418.9925,1.751771,No,No
+DRO,524,CASU,45,419.1407,1.753135,No,No
+DRO,524,CASU,46,418.3231,1.752305,No,No
+DRO,524,CASU,47,418.5861,1.752933,No,No
+DRO,524,CASU,48,418.7428,1.750065,No,No
+DRO,524,CASU,49,419.0687,1.751557,No,No
+DRO,524,CASU,50,418.8942,1.752195,No,No
+DRO,524,CASU,51,418.9207,1.750152,No,No
+DRO,524,CASU,52,418.6023,1.751452,No,No
+DRO,524,CASU,53,418.6819,1.752464,No,No
+DRO,524,CASU,54,418.7467,1.751912,No,No
+DRO,524,CASU,55,419.3283,1.752573,No,No
+DRO,524,CASU,56,418.959,1.751847,No,No
+DRO,524,CASU,57,418.876,1.752487,No,No
+DRO,524,CASU,58,419.3061,1.751932,No,No
+DRO,524,CASU,59,418.8391,1.751327,No,No
+DRO,524,CASU,60,419.3366,1.752702,No,No
+DRO,524,CASU,61,419.1005,1.751111,No,No
+DRO,524,CASU,62,419.5191,1.75192,No,No
+DRO,524,CASU,63,419.3522,1.752003,No,No
+DRO,524,CASU,64,419.5011,1.753168,No,No
+DRO,524,CASU,65,418.7747,1.751173,No,No
+DRO,524,CASU,66,419.2171,1.752156,No,No
+DRO,524,CASU,67,418.8605,1.751878,No,No
+DRO,524,CASU,68,418.9058,1.751623,No,No
+DRO,524,CASU,69,419.4414,1.751492,No,No
+DRO,524,CASU,70,418.7157,1.751828,No,No
+DRO,524,CASU,71,418.9514,1.752137,No,No
+DRO,524,CASU,72,419.1556,1.751402,No,No
+DRO,524,CASU,73,419.5638,1.753911,No,No
+DRO,524,CASU,74,418.9534,1.752039,No,No
+DRO,524,CASU,75,418.9992,1.752518,No,No
+DRO,524,CASU,76,419.2047,1.751476,No,No
+DRO,524,CASU,77,419.8856,1.752015,No,No
+DRO,524,CASU,78,419.3645,1.752146,No,No
+DRO,524,CASU,79,419.2753,1.751904,No,No
+DRO,524,CASU,80,419.4717,1.751126,No,No
+DRO,524,CASU,81,419.5232,1.750554,No,No
+DRO,524,CASU,82,419.3277,1.752514,No,No
+DRO,524,CASU,83,419.2184,1.750767,No,No
+DRO,524,CASU,84,419.6205,1.750415,No,No
+DRO,524,CASU,85,419.5002,1.751022,No,No
+DRO,524,CASU,86,419.5608,1.751574,No,No
+DRO,524,CASU,87,419.7518,1.752613,No,No
+DRO,524,CASU,88,419.3534,1.75246,No,No
+DRO,524,CASU,89,419.3164,1.751222,No,No
+DRO,524,CASU,90,419.6617,1.75275,No,No
+DRO,524,CASU,91,419.2964,1.750894,No,No
+DRO,524,CASU,92,420.0107,1.751633,No,No
+DRO,524,CASU,93,419.94,1.751092,No,No
+DRO,524,CASU,94,419.0829,1.750189,No,No
+DRO,524,CASU,95,419.5118,1.751807,No,No
+DRO,524,CASU,96,419.7722,1.750385,No,No
+DRO,524,CASU,97,419.4576,1.750838,No,No
+DRO,524,CASU,98,419.3755,1.751846,No,No
+DRO,524,CASU,99,419.7446,1.752963,No,No
+DRO,524,CASU,100,419.5628,1.75298,No,No
+DRO,524,CASU,101,418.8922,1.751539,No,No
+DRO,524,CASU,102,420.0648,1.752644,No,No
+DRO,524,CASU,103,420.1233,1.751673,No,No
+DRO,524,CASU,104,419.723,1.752055,No,No
+DRO,524,CASU,105,419.5173,1.749722,No,No
+DRO,524,CASU,106,419.2095,1.751188,No,No
+DRO,524,CASU,107,419.6828,1.752796,No,No
+DRO,524,CASU,108,419.5804,1.75234,No,No
+DRO,524,CASU,109,419.4773,1.752258,No,No
+DRO,524,CASU,110,420.1926,1.751913,No,No
+DRO,524,CASU,111,419.6454,1.753627,No,No
+DRO,524,CASU,112,420.0633,1.752494,No,No
+DRO,524,CASU,113,419.5459,1.752589,No,No
+DRO,524,CASU,114,419.5792,1.752105,No,No
+DRO,524,CASU,115,419.6512,1.751089,No,No
+DRO,524,CASU,116,419.4097,1.750232,No,No
+DRO,524,CASU,117,419.8691,1.751765,No,No
+DRO,524,CASU,118,419.7666,1.751319,No,No
+DRO,524,CASU,119,420.0654,1.752286,No,No
+DRO,524,CASU,120,419.8546,1.751635,No,No
+DRO,524,CASU,121,420.0104,1.75193,No,No
+DRO,524,CASU,122,419.7034,1.750886,No,No
+DRO,524,CASU,123,419.3522,1.754074,No,No
+DRO,524,CASU,124,419.3965,1.751303,No,No
+DRO,524,CASU,125,420.3712,1.752459,No,No
+DRO,524,CASU,126,419.405,1.751182,No,No
+DRO,524,CASU,127,419.3728,1.753669,No,No
+DRO,524,CASU,128,419.7915,1.752824,No,No
+DRO,524,CASU,129,419.3878,1.752017,No,No
+DRO,524,CASU,130,419.498,1.751326,No,No
+DRO,524,CASU,131,420.2774,1.752593,No,No
+DRO,524,CASU,132,419.2984,1.75195,No,No
+DRO,524,CASU,133,419.704,1.752184,No,No
+DRO,524,CASU,134,419.7447,1.751363,No,No
+DRO,524,CASU,135,420.4235,1.752816,No,No
+DRO,524,CASU,136,420.4017,1.75126,No,No
+DRO,524,CASU,137,420.1583,1.752396,No,No
+DRO,524,CASU,138,419.9622,1.75154,No,No
+DRO,524,CASU,139,420.0275,1.752845,No,No
+DRO,524,CASU,140,419.7664,1.752067,No,No
+DRO,524,CASU,141,420.2316,1.752559,No,No
+DRO,524,CASU,142,420.4728,1.751456,No,No
+DRO,524,CASU,143,419.6844,1.752414,No,No
+DRO,524,CASU,144,419.6307,1.752148,No,No
+DRO,524,CASU,145,419.8676,1.752163,No,No
+DRO,524,CASU,146,419.6506,1.751978,No,No
+DRO,524,CASU,147,420.1293,1.753014,No,No
+DRO,524,CASU,148,420.0124,1.752136,No,No
+DRO,524,CASU,149,420.5724,1.753117,No,No
+DRO,524,CASU,150,419.7493,1.750387,No,No
+DRO,524,CASU,151,419.8108,1.751214,No,No
+DRO,524,CASU,152,420.11,1.751211,No,No
+DRO,524,CASU,153,420.4582,1.753094,No,No
+DRO,524,CASU,154,420.5196,1.752481,No,No
+DRO,524,CASU,155,420.8212,1.752623,No,No
+DRO,524,CASU,156,420.2823,1.752565,No,No
+DRO,524,CASU,157,420.4472,1.75218,No,No
+DRO,524,CASU,158,420.3981,1.752694,No,No
+DRO,524,CASU,159,419.9275,1.751793,No,No
+DRO,524,CASU,160,420.3937,1.752213,No,No
+DRO,524,CASU,161,420.4376,1.751045,No,No
+DRO,524,CASU,162,420.3432,1.751992,No,No
+DRO,524,CASU,163,420.1561,1.750093,No,No
+DRO,524,CASU,164,420.6956,1.751829,No,No
+DRO,524,CASU,165,419.9409,1.751976,No,No
+DRO,524,CASU,166,420.4569,1.75287,No,No
+DRO,524,CASU,167,419.936,1.75226,No,No
+DRO,524,CASU,168,420.4413,1.752602,No,No
+DRO,524,CASU,169,420.2808,1.751892,No,No
+DRO,524,CASU,170,420.3586,1.751772,No,No

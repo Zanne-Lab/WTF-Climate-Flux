@@ -157,6 +157,7 @@ resp_c3 <- resp_c2 %>%
                                resp_site=="pw"&SampleID=="265","Yes","No")) %>%
   filter(site_error=="No") %>%
   filter(remove_read == "No")
+#write_csv(resp_c3,"data/processed/wood_resp_IRGA.csv)
 
 
 
@@ -363,7 +364,24 @@ resp_CF_o <- resp_CF %>%
   mutate(CO2_resp_outlier = ifelse(wood_por<=0.5,"low wood %",
                                ifelse(CO2.p>.05,"nonsignificant fit","No")),
          CH4_resp_outlier = ifelse(wood_por<=0.5,"low wood %",
-                                   ifelse(CH4.p>.05,"nonsignificant fit","No")))
+                                   ifelse(CH4.p>.05,"nonsignificant fit","No"))) %>%
+  filter(!is.na(CO2_resp_outlier)) %>%
+  mutate(Dataset = ifelse(Species.Code=="PIRA","Pine","Native"))
+
+# Calculate proportion of samples removed from each dataset
+p_check <- filter(resp_CF_o,Species.Code=="PIRA")
+n_check <- filter(resp_CF_o,Species.Code!="PIRA")
+
+check <- data.frame(Dataset = c("Pine","Native"),
+                    z.Kept = c(nrow(filter(p_check,CO2_resp_outlier=="No")),
+                             nrow(filter(n_check,CO2_resp_outlier=="No"))),
+                    Low_wood = c(nrow(filter(p_check,CO2_resp_outlier=="low wood %")),
+                                 nrow(filter(n_check,CO2_resp_outlier=="low wood %"))),
+                    Nonsignificant = c(nrow(filter(p_check,CO2_resp_outlier=="nonsignificant fit")),
+                                       nrow(filter(n_check,CO2_resp_outlier=="nonsignificant fit")))) %>%
+  pivot_longer(!c(Dataset),names_to="Data",values_to="Proportion")
+write_csv(check,"data/processed/wood_respiration/cleaning_stats.csv")
+
 
 # Merge with linear fit data and check graphs
 resp_CF_o2 <- resp_c3 %>%
@@ -372,6 +390,12 @@ resp_CF_o2 <- resp_c3 %>%
   select(site,SampleID,Species.Code,Etime,CO2d_ppm,CH4d_ppm,CO2_resp_outlier,CH4_resp_outlier)
 resp_pine_o2 <- filter(resp_CF_o2,Species.Code=="PIRA")
 resp_native_o2 <- filter(resp_CF_o2,Species.Code!="PIRA")
+
+# Example removed sample
+IRGA_ex <- resp_native_o2 %>%
+  filter(SampleID%in%c("523","524")) %>%
+  write_csv("data/processed/wood_respiration/IRGA_ex.csv")
+
 
 # Save IRGA data plots for pine CO2
 seq2 <- 1:6
