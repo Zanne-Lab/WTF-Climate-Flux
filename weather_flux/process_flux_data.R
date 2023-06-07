@@ -437,7 +437,8 @@ dev.off()
 
 
 # Save final files
-# Negative FMC values are likely 0. They will be removed from analysis.
+# Negative FMC values are likely due to experimental error. 
+# They will be removed from analysis.
 resp_pine_CO2 <- resp_CF_o %>%
   filter(Species.Code=="PIRA") %>%
   filter(CO2_resp_outlier == "No") %>%

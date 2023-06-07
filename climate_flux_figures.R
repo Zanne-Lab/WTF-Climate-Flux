@@ -249,6 +249,9 @@ d1 <- ggplot() +
   geom_point(data=filter(native_flux,site=="DRO"),
              mapping=aes(FMC,CO2_resp_rate,color=Species.Code),
              alpha=0.8) +
+  geom_point(data=filter(sim_flux,site=="DRO"),
+             mapping=aes(Block_FMC,Sim_CO2),
+             alpha=0.01,color=p_DRO) +
   scale_color_manual(name="Species",values=p_DRO_sp) +
   xlab("Simulated Block FMC (%)") + ylab("CO2 Flux (ug CO2/s/g)") +
   xlim(0,650) + ylim(-0.001,0.125) +
