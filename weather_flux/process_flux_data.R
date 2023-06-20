@@ -157,7 +157,7 @@ resp_c3 <- resp_c2 %>%
                                resp_site=="pw"&SampleID=="265","Yes","No")) %>%
   filter(site_error=="No") %>%
   filter(remove_read == "No")
-#write_csv(resp_c3,"data/processed/wood_resp_IRGA.csv)
+#write_csv(resp_c3,"data/processed/wood_respiration/wood_resp_IRGA.csv")
 
 
 
@@ -258,7 +258,7 @@ weights_all3 <- weights_all2 %>%
 
 # Read in climate dataset and select relevant columns
 wthr_BP <- read_csv("data/processed/weather_stations/wthr_1hr_FMC.csv") %>%
-  select(site, date, BP_mbar_Avg) %>% 
+  select(site, date, BP_mbar_Avg, ib_AirTC_Avg) %>% 
   mutate(date = ymd_hms(date)) %>%
   arrange(site,date) %>%
   rename(site_wthr = site)
@@ -281,7 +281,8 @@ resp_1hr <- resp_c3 %>%
 
 Pressure <- left_join(resp_1hr, wthr_BP, by=c("site_wthr","date")) %>%
   group_by(SampleID) %>%
-  summarize(mean_Pressure = mean(BP_mbar_Avg,na.rm=TRUE)) %>%
+  summarize(mean_Pressure = mean(BP_mbar_Avg,na.rm=TRUE),
+            mean_ib = mean(ib_AirTC_Avg,na.rm=TRUE)) %>%
   ungroup() 
 
 
