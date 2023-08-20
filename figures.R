@@ -40,6 +40,12 @@ bm_fits_t <- read_csv("bayesian_model/bm_fits_t.csv") %>%
                                site=="MLES" ~ "Sclerophyll",
                                site=="STCK" ~ "Wet savanna",
                                site=="PNW" ~ "Dry savanna"))
+bm_fits_mt <- read_csv("bayesian_model/bm_fits_mt.csv") %>%
+  mutate(site_desc = case_when(site=="DRO" ~ "Wet rainforest",
+                               site=="MLRF" ~ "Dry rainforest",
+                               site=="MLES" ~ "Sclerophyll",
+                               site=="STCK" ~ "Wet savanna",
+                               site=="PNW" ~ "Dry savanna"))
 FMC_sim <- read_csv("FMC_mechanistic_model/fuel_moisture_output_t3.csv") %>%
   mutate(site_desc = case_when(site=="DRO" ~ "Wet rainforest",
                                site=="MLRF" ~ "Dry rainforest",
@@ -106,10 +112,13 @@ p_block <- "#333333"
 
 # Common aesthetics
 fig_aes <- theme_bw() +
-  theme(panel.grid.major = element_blank(),
+  theme(text = element_text(size=14),
+        panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         strip.background =element_rect(fill="gray95"),
-        strip.text.x = element_text(size = 12))
+        strip.text.x = element_text(size = 14, face="bold"),
+        axis.title.x = element_text(size=14),
+        axis.title.y = element_text(size=14))
 
 
 
@@ -205,7 +214,7 @@ fig3 <- plot_grid(sim_rain,sim_temp,
                   labels = c("A","B"),
                   label_size = 16)
 
-pdf("figures/R_figs/Fig3.pdf",width=12,height=6.5)
+pdf("figures/R_figs/Fig3.pdf",width=12,height=6.75)
 print(fig3)
 dev.off()
 
@@ -216,77 +225,88 @@ dev.off()
 #....Moisture content + flux ####
 bm_ma <- ggplot() + 
   geom_ribbon(bm_fits_m,mapping=aes(x=effect1__,y=estimate__,
-                                  ymin=lower__,ymax=upper__,fill=site),
-              alpha=0.4,color=NA) +
+                                  ymin=lower__,ymax=upper__),
+              alpha=0.4,fill="gray",color=NA) +
   geom_smooth(bm_fits_m,mapping=aes(effect1__,estimate__),
               color=p_block) + 
   facet_wrap2(~fct_relevel(site_desc,"Wet rainforest",
                           "Dry rainforest","Sclerophyll",
                           "Wet savanna","Dry savanna"),
              nrow=1,strip=site_str) +
-  scale_fill_manual(name="Site",values=p_site) +
-  fig_aes + 
-  geom_point(pine_flux,mapping=aes(FMC,CO2_resp_rate),
-                color=p_pira,shape=17,alpha=0.8) +
+  geom_point(pine_flux,mapping=aes(FMC,CO2_resp_rate,color="Measurements"),
+                shape=17,alpha=0.8) +
+  scale_color_manual(values=c("Measurements"=p_pira)) +
   xlab("Moisture Content (%)") + 
-  ylab(bquote(~CO[2]~ 'Flux('*mu~'g'~CO[2]~ s^-1~g^-1*')')) + 
-  guides(color=FALSE, fill=FALSE)
+  ylab(bquote(~CO[2]~ 'Flux('*mu~'g'~CO[2]~ s^-1~g^-1*')')) +
+  fig_aes + 
+  theme(legend.position = "top",
+        legend.title = element_blank())
 
-#....Temp + flux ####
+#....S3: Temp + flux ####
 bm_ta <- ggplot() + 
   geom_ribbon(bm_fits_t,mapping=aes(x=effect1__,y=estimate__,
-                                    ymin=lower__,ymax=upper__,fill=site),
-              alpha=0.3,color=NA) +
+                                    ymin=lower__,ymax=upper__),
+              alpha=0.4,fill="gray",color=NA) +
   geom_smooth(bm_fits_t,mapping=aes(effect1__,estimate__),
               color=p_block) + 
   facet_wrap2(~fct_relevel(site_desc,"Wet rainforest",
                           "Dry rainforest","Sclerophyll",
                           "Wet savanna","Dry savanna"),
               nrow=1,strip=site_str) +
-  scale_fill_manual(name="Site",values=p_site) +
-  fig_aes + 
-  geom_point(pine_flux,mapping=aes(mean_Tcham,CO2_resp_rate),
-             color=p_pira,shape=17,alpha=0.8) +
+  geom_point(pine_flux,mapping=aes(mean_Tcham,CO2_resp_rate,color="Measurements"),
+             shape=17,alpha=0.8) +
+  scale_color_manual(values=c("Measurements"=p_pira)) +
   xlab("Ambient Temperature (°C)") + 
-  ylab(bquote(~CO[2]~ 'Flux('*mu~'g'~CO[2]~ s^-1~g^-1*')')) + 
-  guides(color=FALSE, fill=FALSE)
+  ylab(bquote(~CO[2]~ 'Flux('*mu~'g'~CO[2]~ s^-1~g^-1*')')) +
+  fig_aes + 
+  theme(legend.position = "top",
+        legend.title = element_blank())
 
-fig4 <- plot_grid(bm_ma,bm_ta,
-                  nrow=2,ncol=1,
-                  labels=c("A","B"),
-                  label_size = 16)
-
-png("figures/PNG/Fig4_BM.png",width=3500,height=1650,res=300)
-print(fig4)
+png("figures/PNG/S3_BM_temp.png",width=3500,height=1000,res=300)
+print(bm_ta)
 dev.off()
 
-pdf("figures/Fig4_BM.pdf",width=12,height=5.5)
-print(fig4)
+pdf("figures/S3_BM_temp.pdf",width=12,height=3.375)
+print(bm_ta)
 dev.off()
 
 
 
-#....Combined plot NEEDS EDITING ####
-bm_all <- data.frame(site = bm_fits_m$site,
-                     site_desc = bm_fits_m$site_desc,
-                     m_effect = bm_fits_m$effect1__,
-                     t_effect = bm_fits_t$effect1__,
-                     m_CO2_resp = bm_fits_m$estimate__,
-                     t_CO2_resp = bm_fits_t$estimate__)
-
-ggplot() +
-  geom_point(bm_all,mapping=aes(m_effect,m_CO2_resp),
-             color="blue",alpha=0.5) +
-  geom_point(bm_all,mapping=aes(t_effect,t_CO2_resp),
-             color="red",alpha=0.5) +
+#....Interaction + flux ####
+p_temp <- c("#f13e3e","#9d2627","#501111")
+bm_fits_mt$effect2__ <- as.factor(round(bm_fits_mt$effect2__,0))
+bm_int <- ggplot() +
+  #geom_ribbon(bm_fits_mt,mapping=aes(x=effect1__,y=estimate__,ymin=lower__,ymax=upper__,fill=effect2__),alpha=0.4,color=NA) +
+  geom_point(data=bm_fits_mt,
+             mapping=aes(x=effect1__,y=estimate__,
+                         color=effect2__),
+             alpha=0.8,size=1.5) +
   facet_wrap2(~fct_relevel(site_desc,"Wet rainforest",
                            "Dry rainforest","Sclerophyll",
                            "Wet savanna","Dry savanna"),
               nrow=1,strip=site_str) +
-  fig_aes
+  scale_color_manual(name="Ambient Temperature (°C)",
+                         values=p_temp) +
+  #scale_fill_manual(values=p_temp) +
+  xlab("Moisture Content (%)") + 
+  ylab(bquote(~CO[2]~ 'Flux('*mu~'g'~CO[2]~ s^-1~g^-1*')')) + 
+  fig_aes +
+  theme(legend.position = "top") +
+  guides(fill=FALSE)
 
+#....Final figure ####
+fig4 <- plot_grid(bm_ma,bm_int,
+                  nrow=2,ncol=1,
+                  labels=c("A","B"),
+                  label_size = 16)
 
+png("figures/PNG/Fig4_BM.png",width=3500,height=2000,res=300)
+print(fig4)
+dev.off()
 
+pdf("figures/Fig4_BM.pdf",width=12,height=6.75)
+print(fig4)
+dev.off()
 
 
 
@@ -302,7 +322,7 @@ time_flux2 <- data.frame(site = wthr_FMC$site,
 
 #....No uncertainty ####
 fig5 <- ggplot(time_flux2) +
-  geom_line(mapping=aes(date,Estimate),color=p_block,alpha=0.5) +
+  geom_line(mapping=aes(date,Estimate),color=p_block,alpha=0.6) +
   xlab("Date") + ylab(bquote(~CO[2]~ 'Flux('*mu~'g'~CO[2]~ s^-1~g^-1*')')) +
   facet_wrap2(~fct_relevel(site_desc,"Wet rainforest",
                            "Dry rainforest","Sclerophyll",
@@ -311,22 +331,21 @@ fig5 <- ggplot(time_flux2) +
   fig_aes +
   guides(color=FALSE, fill=FALSE)
 
-png("figures/PNG/Fig5_CO2_time.png",width=3500,height=825,res=300)
+png("figures/PNG/Fig5_CO2_time.png",width=3500,height=850,res=300)
 print(fig5)
 dev.off()
 
-pdf("figures/Fig5_CO2_time.pdf",width=12,height=2.75)
+pdf("figures/Fig5_CO2_time.pdf",width=12,height=2.85)
 print(fig5)
 dev.off()
 
 
 
-#....S3: with uncertainty ####
-s3 <- ggplot(time_flux2) +
-  geom_ribbon(mapping=aes(x=date,y=Estimate,ymin=Q2.5,ymax=Q97.5,
-                          fill=site),
-              alpha=0.3,color=NA) +
-  geom_line(mapping=aes(date,Estimate),color=p_block,alpha=0.5) +
+#....S4: with uncertainty ####
+s4 <- ggplot(time_flux2) +
+  geom_ribbon(mapping=aes(x=date,y=Estimate,ymin=Q2.5,ymax=Q97.5),
+              alpha=0.4,fill="gray",color=NA) +
+  geom_line(mapping=aes(date,Estimate),color=p_block,alpha=0.6) +
   scale_fill_manual(name="Site",values=p_site) +
   xlab("Date") + ylab(bquote(~CO[2]~ 'Flux('*mu~'g'~CO[2]~ s^-1~g^-1*')')) +
   facet_wrap2(~fct_relevel(site_desc,"Wet rainforest",
@@ -336,12 +355,12 @@ s3 <- ggplot(time_flux2) +
   fig_aes +
   guides(color=FALSE, fill=FALSE)
 
-png("figures/PNG/S3_CO2_time_un.png",width=3500,height=825,res=300)
-print(s3)
+png("figures/PNG/S4_CO2_time_un.png",width=3500,height=850,res=300)
+print(s4)
 dev.off()
 
-pdf("figures/S3_CO2_time_un.pdf",width=12,height=2.75)
-print(s3)
+pdf("figures/S4_CO2_time_un.pdf",width=12,height=2.85)
+print(s4)
 dev.off()
 
 
@@ -421,19 +440,19 @@ d2 <- ggplot() +
 
 #....Final figures ####
 pdf("figures/R_figs/Fig6_A.pdf",width=5.5,height=4.2)
-plot_grid(b1,labels="A")
+plot_grid(b1,labels="A",label_size = 16)
 dev.off()
 
 pdf("figures/R_figs/Fig6_B.pdf",width=5.5,height=4.2)
-plot_grid(d1,labels="B")
+plot_grid(d1,labels="B",label_size = 16)
 dev.off()
 
 pdf("figures/R_figs/Fig6_C.pdf",width=5.5,height=4.2)
-plot_grid(b2,labels="C")
+plot_grid(b2,labels="C",label_size = 16)
 dev.off()
 
 pdf("figures/R_figs/Fig6_D.pdf",width=5.5,height=4.2)
-plot_grid(d2,labels="D")
+plot_grid(d2,labels="D",label_size = 16)
 dev.off()
 
 
@@ -476,21 +495,17 @@ ML_com_t <- pine_flux %>%
          termite.attack = ifelse(termite.attack==1,"Yes","No")) %>%
   filter(!is.na(termite.attack))
 
-ML_f <- lm(formula = Carbon_por ~ mean_pro_ML * site * termite.attack, 
-           data = ML_com_t)
-summary(ML_f)
-
 fig7 <- ggplot(filter(ML_com_t,termite.attack=="No"),
                aes(x=mean_pro_ML,y=Carbon_por,color="No")) +
   geom_abline(intercept=0, slope=1) +
   stat_smooth(method = "lm", se=FALSE, linetype="dashed",
-              size=0.5, color="gray5") +
+              linewidth=0.5, color="gray5") +
   stat_regline_equation(aes(label=paste(after_stat(adj.rr.label))),
                         show.legend=FALSE,label.y=0.95,color="gray5") +
   stat_smooth(data=ML_com_t,
               mapping=aes(x=mean_pro_ML,y=Carbon_por),
               method = "lm", se=FALSE, linetype="dashed",
-              size=0.5, color="brown3") +
+              linewidth=0.5, color="brown3") +
   stat_regline_equation(data=ML_com_t,
                         mapping=aes(x=mean_pro_ML,y=Carbon_por,
                                     label=paste(after_stat(adj.rr.label))),
@@ -516,12 +531,12 @@ fig7 <- ggplot(filter(ML_com_t,termite.attack=="No"),
   theme(legend.position = "top")
 
 png("figures/PNG/Fig7_pine_mass_loss_comparison.png",
-    width=3500,height=950,res=300)
+    width=3500,height=1000,res=300)
 print(fig7)
 dev.off()
 
 pdf("figures/Fig7_pine_mass_loss_comparison.pdf",
-    width=12,height=3.3)
+    width=12,height=3.375)
 print(fig7)
 dev.off()
 
@@ -542,12 +557,16 @@ ML_natives <- native_flux %>%
          Carbon_por = round(Carbon_por,2),
          termite.attack = ifelse(termite.attack==1,"Yes","No")) %>%
   filter(!is.na(termite.attack)) %>%
-  mutate(months = as.character(months))
+  mutate(months = as.character(months),
+         title = paste0(site_desc,": ",Species.Code))
 
 # Aesthetics for coloring facet strip
 p_native_site <- c(rep(adjustcolor(p_DRO,alpha.f = 0.4),10),
                    rep(adjustcolor(p_PNW,alpha.f = 0.4),6))
 native_str <- strip_themed(background_x = elem_list_rect(fill = p_native_site))
+
+ML_sp_order <- unique(arrange(ML_natives,site,Species.Code)$title)
+ML_natives$title<-factor(ML_natives$title, levels = ML_sp_order)
 
 fig8 <- ggplot(filter(ML_natives,termite.attack=="No"),
                aes(mean_pro_ML,Carbon_por,
@@ -576,7 +595,7 @@ fig8 <- ggplot(filter(ML_natives,termite.attack=="No"),
                          color="Yes")) +
   scale_color_manual(name="Termite discovery",
                      values=c("No"="gray5","Yes"="brown3")) +
-  facet_wrap2(~Species.Code,
+  facet_wrap2(~title,
               strip = native_str) +
   xlab("Carbon Loss (g C/g C)") +
   ylab("Carbon Flux (g C/g C)") +
@@ -614,7 +633,7 @@ S1_A <- ggplot(check, aes(fill=Data, y=Proportion, x=Dataset)) +
   fig_aes
 
 pdf("figures/R_figs/S1_A.pdf",width=3.5,height=4)
-plot_grid(S1_A,labels = "A")
+plot_grid(S1_A,labels = "A",label_size=16)
 dev.off()
 
 # Example measurement plot
@@ -627,12 +646,12 @@ S1_B <- ggplot(IRGA_ex,aes(Etime,CO2d_ppm,color=CO2_resp_outlier)) +
   theme(legend.position = "none")
 
 pdf("figures/R_figs/S1_B.pdf",width=8.5,height=4)
-plot_grid(S1_B,labels = "B")
+plot_grid(S1_B,labels = "B",label_size=16)
 dev.off()
 
 
 
-#..S4. Natives vs models temp ####
+#..S5. Natives vs models temp ####
 sim_flux <- data.frame(site = FMC_sim$site,
                        site_desc = FMC_sim$site_desc,
                        Block_FMC = FMC_sim$fuel_block,
@@ -707,18 +726,37 @@ dt2 <- ggplot() +
 
 #....Final figures ####
 
-pdf("figures/R_figs/S4_A.pdf",width=5.5,height=4.2)
-plot_grid(bt1,labels="A")
+pdf("figures/R_figs/S5_A.pdf",width=5.5,height=4.2)
+plot_grid(bt1,labels="A",label_size=16)
 dev.off()
 
-pdf("figures/R_figs/S4_B.pdf",width=5.5,height=4.2)
-plot_grid(dt1,labels="B")
+pdf("figures/R_figs/S5_B.pdf",width=5.5,height=4.2)
+plot_grid(dt1,labels="B",label_size=16)
 dev.off()
 
-pdf("figures/R_figs/S4_C.pdf",width=5.5,height=4.2)
-plot_grid(bt2,labels="C")
+pdf("figures/R_figs/S5_C.pdf",width=5.5,height=4.2)
+plot_grid(bt2,labels="C",label_size=16)
 dev.off()
 
-pdf("figures/R_figs/S4_D.pdf",width=5.5,height=4.2)
-plot_grid(dt2,labels="D")
+pdf("figures/R_figs/S5_D.pdf",width=5.5,height=4.2)
+plot_grid(dt2,labels="D",label_size=16)
 dev.off()
+
+
+#..Table S4: C loss model ####
+ML_r <- ML_com_t %>%
+  rename('Termite Discovery' = termite.attack,
+         'Carbon Flux' = Carbon_por,
+         'Carbon Loss' = mean_pro_ML,
+         Site = site_desc)
+
+ML_f <- lm(formula = `Carbon Flux` ~ `Carbon Loss` * Site * `Termite Discovery`, 
+           data = ML_r)
+summary(ML_f)
+
+library(gtsummary)
+tbl_regression(ML_f) %>%
+  bold_p() %>%
+  as_kable_extra(escape=FALSE,format="latex") %>%
+  cat()
+
