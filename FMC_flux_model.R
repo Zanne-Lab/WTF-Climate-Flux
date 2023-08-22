@@ -79,7 +79,7 @@ compare_ic(loo1,loo2,loo3)
 #..Model 1 ####
 
 p_check_test = pp_check(model_1,ndraws=100)
-pdf("p_check_model_1.pdf")
+pdf("bayesian_model/p_check_model_1.pdf")
 p_check_test
 dev.off()
 
@@ -89,25 +89,25 @@ me_fit <- conditional_effects(model_1, conditions = conditions,
                               re_formula = NULL, method = "predict")
 
 model_m0_test = plot(me_fit, plot = FALSE)[[1]] + facet_wrap(~site)			
-pdf("model_1_CO2_FMC.pdf")
+pdf("bayesian_model/model_1_CO2_FMC.pdf")
 model_m0_test
 dev.off()
 
 pcheck_m0_test = pp_check(model_1, type = "scatter_avg_grouped", group = "site") + 
   geom_abline(intercept = 0, slope = 1 , color = "red", lty = 2)
-pdf("p_check_model_1_site.pdf")
+pdf("bayesian_model/p_check_model_1_site.pdf")
 pcheck_m0_test
 dev.off() 
 
 plot_chain = plot(model_1)
-pdf("chain_model_1.pdf")
+pdf("bayesian_model/chain_model_1.pdf")
 plot_chain
 dev.off()
 
 #..Model 2 ####
 
 p_check_test = pp_check(model_2,ndraws=100)
-pdf("p_check_model_2.pdf")
+pdf("bayesian_model/p_check_model_2.pdf")
 p_check_test
 dev.off()
 
@@ -117,30 +117,30 @@ me_fit <- conditional_effects(model_2, conditions = conditions,
                               re_formula = NULL, method = "predict")
 
 model_m0_test = plot(me_fit, plot = FALSE)[[1]] + facet_wrap(~site)			
-pdf("model_2_CO2_FMC.pdf")
+pdf("bayesian_model/model_2_CO2_FMC.pdf")
 model_m0_test
 dev.off()
 
 model_m0_test = plot(me_fit, plot = FALSE)[[2]] + facet_wrap(~site)			
-pdf("model_2_CO2_Temp.pdf")
+pdf("bayesian_model/model_2_CO2_Temp.pdf")
 model_m0_test
 dev.off()
 
 pcheck_m0_test = pp_check(model_2, type = "scatter_avg_grouped", group = "site") + 
   geom_abline(intercept = 0, slope = 1 , color = "red", lty = 2)
-pdf("p_check_model_2_site.pdf")
+pdf("bayesian_model/p_check_model_2_site.pdf")
 pcheck_m0_test
 dev.off()
 
 plot_chain = plot(model_2)
-pdf("chain_model_2.pdf")
+pdf("bayesian_model/chain_model_2.pdf")
 plot_chain
 dev.off()
 
 #..Model 3 ####
 
 p_check_test = pp_check(model_3,ndraws=100)
-pdf("figures/R_figs/S2_A.pdf",width=4,height=4)
+pdf("figures/R_figs/S2_A.pdf",width=6,height=6)
 p_check_test
 dev.off()
 
@@ -149,26 +149,24 @@ rownames(conditions) <- unique(pine_flux$site)
 me_fit <- conditional_effects(model_3, conditions = conditions,
                               re_formula = NULL, method = "predict")
 
-#model_m0_test = plot(me_fit, plot = FALSE)[[1]] + facet_wrap(~site)			
-#pdf("model_3_CO2_FMC.pdf")
-#model_m0_test
-#dev.off()
+model_m0_test = plot(me_fit, plot = FALSE)[[1]] + facet_wrap(~site)			
+pdf("bayesian_model/model_3_CO2_FMC.pdf")
+model_m0_test
+dev.off()
 
-#model_m0_test = plot(me_fit, plot = FALSE)[[2]] + facet_wrap(~site)			
-#pdf("model_3_CO2_Temp.pdf")
-#model_m0_test
-#dev.off()
+model_m0_test = plot(me_fit, plot = FALSE)[[2]] + facet_wrap(~site)			
+pdf("bayesian_model/model_3_CO2_Temp.pdf")
+model_m0_test
+dev.off()
 
 pcheck_m0_test = pp_check(model_3, type = "scatter_avg_grouped", group = "site") + 
   geom_abline(intercept = 0, slope = 1 , color = "red", lty = 2)
-pdf("figures/R_figs/S2_B.pdf",width=10,height=6)
+pdf("figures/R_figs/S2_B.pdf",width=12,height=6)
 pcheck_m0_test
 dev.off()
 
-th <- bayesplot_theme_set(theme_default() + theme(text=element_text(family="Ariel")))
-
-plot_chain = plot(model_3) + th
-pdf("figures/R_figs/S2_C.pdf")
+plot_chain = plot(model_3)[[1]]
+pdf("figures/R_figs/S2_C.pdf",width=12,height=10)
 plot_chain
 dev.off()
 
@@ -340,43 +338,43 @@ dev.off()
 
 pred.3a 	= predict(model_3, newdata = FMC_sim[1:17652,],ndraws = 2000)
 pred.3a     = as.data.frame(pred.3a)
-write_csv(pred.3a,"pred.3a.csv")
+write_csv(pred.3a,"bayesian_model/pred.3a.csv")
 
 pred.3b 	= predict(model_3, newdata = FMC_sim[17653:35304,],ndraws = 2000)
 pred.3b     = as.data.frame(pred.3b)
-write_csv(pred.3b,"pred.3b.csv")
+write_csv(pred.3b,"bayesian_model/pred.3b.csv")
 
 pred.3c 	= predict(model_3, newdata = FMC_sim[35305:52956,],ndraws = 2000)
 pred.3c     = as.data.frame(pred.3c)
-write_csv(pred.3c,"pred.3c.csv")
+write_csv(pred.3c,"bayesian_model/pred.3c.csv")
 
 pred.3d 	= predict(model_3, newdata = FMC_sim[52957:70608,],ndraws = 2000)
 pred.3d     = as.data.frame(pred.3d)
-write_csv(pred.3d,"pred.3d.csv")
+write_csv(pred.3d,"bayesian_model/pred.3d.csv")
 
 pred.3e 	= predict(model_3, newdata = FMC_sim[70609:88260,],ndraws = 2000)
 pred.3e     = as.data.frame(pred.3e)
-write_csv(pred.3e,"pred.3e.csv")
+write_csv(pred.3e,"bayesian_model/pred.3e.csv")
 
 pred.3f 	= predict(model_3, newdata = FMC_sim[88261:105912,],ndraws = 2000)
 pred.3f     = as.data.frame(pred.3f)
-write_csv(pred.3f,"pred.3f.csv")
+write_csv(pred.3f,"bayesian_model/pred.3f.csv")
 
 pred.3g 	= predict(model_3, newdata = FMC_sim[105913:123564,],ndraws = 2000)
 pred.3g     = as.data.frame(pred.3g)
-write_csv(pred.3g,"pred.3g.csv")
+write_csv(pred.3g,"bayesian_model/pred.3g.csv")
 
 pred.3h 	= predict(model_3, newdata = FMC_sim[123565:141216,],ndraws = 2000)
 pred.3h     = as.data.frame(pred.3h)
-write_csv(pred.3h,"pred.3h.csv")
+write_csv(pred.3h,"bayesian_model/pred.3h.csv")
 
 pred.3i 	= predict(model_3, newdata = FMC_sim[141217:158868,],ndraws = 2000)
 pred.3i     = as.data.frame(pred.3i)
-write_csv(pred.3i,"pred.3i.csv")
+write_csv(pred.3i,"bayesian_model/pred.3i.csv")
 
 pred.3j 	= predict(model_3, newdata = FMC_sim[158869:176525,],ndraws = 2000)
 pred.3j     = as.data.frame(pred.3j)
-write_csv(pred.3j,"pred.3j.csv")
+write_csv(pred.3j,"bayesian_model/pred.3j.csv")
 
 M1.3  <- read_csv("pred.3a.csv")
 M2.3  <- read_csv("pred.3b.csv")
@@ -391,23 +389,23 @@ M10.3 <- read_csv("pred.3j.csv")
 
 
 pred_model_3_2000  = as.data.frame(rbind(M1.3,M2.3,M3.3,M4.3,M5.3,M6.3,M7.3,M8.3,M9.3,M10.3))
-write_csv(pred_model_3_2000,"pred_model_3_2000.csv")
+write_csv(pred_model_3_2000,"bayesian_model/pred_model_3_2000.csv")
 
 h_M1 <- ggplot(FMC_sim, aes(as.Date(date))) + geom_ribbon(aes(ymin = pred_model_3_2000$Q2.5, ymax = pred_model_3_2000$Q97.5), fill = "grey70") + 
   geom_line(aes(y = pred_model_3_2000$Estimate)) + facet_wrap(~FMC_sim$site)
-pdf("M3_time_series.pdf")
+pdf("bayesian_model/M3_time_series.pdf")
 h_M1
 dev.off()
 
 h_M2A_1000 <- ggplot(FMC_sim, aes(FMC)) + geom_ribbon(aes(ymin = pred_model_3_2000$Q2.5, ymax = pred_model_3_2000$Q97.5), fill = "grey70") + 
   geom_line(aes(y = pred_model_3_2000$Estimate)) + facet_wrap(~FMC_sim$site)
-pdf("M3_FMC.pdf")
+pdf("bayesian_model/M3_FMC.pdf")
 h_M2A_1000
 dev.off()
 
 #h_M2A_1000 <- ggplot(FMC_sim, aes(T_wood)) + geom_ribbon(aes(ymin = pred_model_3_2000$Q2.5, ymax = pred_model_3_2000$Q97.5), fill = "grey70") + 
 #  geom_line(aes(y = pred_model_3_2000$Estimate)) + facet_wrap(~FMC_sim$site)
-#pdf("M3_Temp.pdf")
+#pdf("bayesian_model/M3_Temp.pdf")
 #h_M2A_1000
 #dev.off()
 
@@ -434,13 +432,4 @@ effects_mt <- me_fit[[3]] %>%
 write_csv(effects_m,"bayesian_model/bm_fits_m.csv")
 write_csv(effects_t,"bayesian_model/bm_fits_t.csv")
 write_csv(effects_mt,"bayesian_model/bm_fits_mt.csv")
-
-
-
-########## Prediction on mechanistic model output ##########
-
-# Use model to create time-resoled respiration rates
-pred <- predict(m0_n, newdata = FMC_sim)
-pred <- as.data.frame(pred.2)
-write_csv(pred,"bayesian_model/FMC_pred.csv")
 
