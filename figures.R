@@ -191,7 +191,7 @@ FMC_sim_t <- FMC_sim %>%
             by=c("site","date")) %>%
   pivot_longer(!c(date,site,site_desc),names_to="var",values_to="temp") %>%
   mutate(Model = case_when(var=="wood_temp" ~ "Simulations",
-                           var=="ib_AirTC_Avg" ~ "iButton"))
+                           var=="ib_AirTC_Avg" ~ "Air temperature"))
 
 sim_temp <- ggplot() + 
   geom_line(data=FMC_sim_t,mapping=aes(date,temp,color=Model),
@@ -238,6 +238,7 @@ bm_ma <- ggplot() +
   scale_color_manual(values=c("Measurements"=p_pira)) +
   xlab("Moisture Content (%)") + 
   ylab(bquote(~CO[2]~ 'Flux('*mu~'g'~CO[2]~ s^-1~g^-1*')')) +
+  ylim(0,0.161) +
   fig_aes + 
   theme(legend.position = "top",
         legend.title = element_blank())
@@ -256,13 +257,14 @@ bm_ta <- ggplot() +
   geom_point(pine_flux,mapping=aes(mean_Tcham,CO2_resp_rate,color="Measurements"),
              shape=17,alpha=0.8) +
   scale_color_manual(values=c("Measurements"=p_pira)) +
-  xlab("Ambient Temperature (°C)") + 
+  xlab("Temperature (°C)") + 
   ylab(bquote(~CO[2]~ 'Flux('*mu~'g'~CO[2]~ s^-1~g^-1*')')) +
+  ylim(0,0.161) +
   fig_aes + 
   theme(legend.position = "top",
         legend.title = element_blank())
 
-png("figures/PNG/S3_BM_temp.png",width=3500,height=1000,res=300)
+png("figures/PNG/S3_BM_temp.png",width=3500,height=984,res=300)
 print(bm_ta)
 dev.off()
 
@@ -300,7 +302,7 @@ fig4 <- plot_grid(bm_ma,bm_int,
                   labels=c("A","B"),
                   label_size = 16)
 
-png("figures/PNG/Fig4_BM.png",width=3500,height=2000,res=300)
+png("figures/PNG/Fig4_BM.png",width=3500,height=1969,res=300)
 print(fig4)
 dev.off()
 
@@ -331,7 +333,7 @@ fig5 <- ggplot(time_flux2) +
   fig_aes +
   guides(color=FALSE, fill=FALSE)
 
-png("figures/PNG/Fig5_CO2_time.png",width=3500,height=850,res=300)
+png("figures/PNG/Fig5_CO2_time.png",width=3500,height=831,res=300)
 print(fig5)
 dev.off()
 
@@ -355,7 +357,7 @@ s4 <- ggplot(time_flux2) +
   fig_aes +
   guides(color=FALSE, fill=FALSE)
 
-png("figures/PNG/S4_CO2_time_un.png",width=3500,height=850,res=300)
+png("figures/PNG/S4_CO2_time_un.png",width=3500,height=831,res=300)
 print(s4)
 dev.off()
 
@@ -531,7 +533,7 @@ fig7 <- ggplot(filter(ML_com_t,termite.attack=="No"),
   theme(legend.position = "top")
 
 png("figures/PNG/Fig7_pine_mass_loss_comparison.png",
-    width=3500,height=1000,res=300)
+    width=3500,height=984,res=300)
 print(fig7)
 dev.off()
 
@@ -604,7 +606,7 @@ fig8 <- ggplot(filter(ML_natives,termite.attack=="No"),
   theme(legend.position = "top")
 
 png("figures/PNG/Fig8_native_mass_loss_comparison.png",
-    width=3000,height=2900,res=300)
+    width=3000,height=2864,res=300)
 print(fig8)
 dev.off()
 
@@ -672,7 +674,7 @@ bt1 <- ggplot() +
              mapping=aes(mean_Tcham,CO2_resp_rate,color=Species.Code),
              alpha=0.9) +
   scale_color_manual(name="Species",values=p_DRO_sp) +
-  xlab("Ambient Temperature (°C)") + ylab(bquote(~CO[2]~ 'Flux('*mu~'g'~CO[2]~ s^-1~g^-1*')')) + 
+  xlab("Temperature (°C)") + ylab(bquote(~CO[2]~ 'Flux('*mu~'g'~CO[2]~ s^-1~g^-1*')')) + 
   xlim(0,70) + ylim(-0.001,0.125) +
   fig_aes 
 
@@ -704,7 +706,7 @@ bt2 <- ggplot() +
              mapping=aes(mean_Tcham,CO2_resp_rate,color=Species.Code),
              alpha=0.9) +
   scale_color_manual(name="Species",values=p_PNW_sp) +
-  xlab("Ambient Temperature (°C)") + ylab(bquote(~CO[2]~ 'Flux('*mu~'g'~CO[2]~ s^-1~g^-1*')')) + 
+  xlab("Temperature (°C)") + ylab(bquote(~CO[2]~ 'Flux('*mu~'g'~CO[2]~ s^-1~g^-1*')')) + 
   xlim(0,70) + ylim(-0.001,0.125) +
   fig_aes
 
