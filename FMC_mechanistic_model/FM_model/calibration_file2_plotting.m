@@ -111,8 +111,8 @@ end
 
 T_o     = cu(:,1);  % Temperature of the outer layer [K]
 T_c     = cu(:,2);  % Temperature of the core [K]
-m_o     = cu(:,3);  % Moisture of the outer layer [kg/s]
-m_c     = cu(:,4);  % Moisture of the core [kg/s]
+m_o     = cu(:,3);  % Moisture of the outer layer [kg/h]
+m_c     = cu(:,4);  % Moisture of the core [kg/h]
 f       = p(1);
 we      = 0.045;    % Weight of the stick [kg]
 rho_s   = q(1);   % Stick density (400 [kg/m3], Nelson, 2000)
