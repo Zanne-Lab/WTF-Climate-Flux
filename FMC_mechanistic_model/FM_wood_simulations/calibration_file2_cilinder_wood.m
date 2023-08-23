@@ -2,32 +2,32 @@ function [output] = calibration_file2_cilinder_wood(p)
 
 %% Calibration %%
 
-q(1)  = 0.48*1000;      % Stick density (400 [kg/m3], Nelson, 2000)
-q(2)  = 0.10;           % Length of stick [0.41 m]
-q(3)  = 0.0350;         % Radius of stick [0.0250 m]
+q(1)  = 0.48*1000;      % Stick density ([kg/m3])
+q(2)  = 0.10;           % Length of stick [m]
+q(3)  = 0.0350;         % Radius of stick [m]
 q(4)  = 0.85;           % Stick emissivity [0.85]
-q(5)  = 60*60*5.67e-8;  % Stephan-Boltzmann constant [5.67e-8 J/m2/K4/(30min)]
+q(5)  = 60*60*5.67e-8;  % Stephan-Boltzmann constant [J/m2/K4/(h)]
 q(6)  = 0.95;           % Emissivity of the ground [0.95]
 q(7)  = 0.965;          % Emissivity of the vegetation [0.965]
 q(8)  = 1.2;            % Fit parameter 1 [1.2]
 q(9)  = 3.0;            % Fit parameter 2 [3.0]
 q(10) = 0.5;            % Fit exponent 3  [0.5]
-q(11) = 46.5;           % Climatological value [46.5 cm K/hPa]
+q(11) = 46.5;           % Climatological value [cm K/hPa]
 q(12) = 0.26;           % Constant based on cloud type [0.26]
 q(13) = 0.65;           % Stick Albedo [0.65]
 q(14) = 0.185;          % Ground albedo [0.185]
-q(15) = 1.093;          % Density of air [1.093 kg/m3]
-q(16) = 1005;           % Specific heat of air [1005 J/kg/K]
-q(17) = 60*60*1.9e-5;   % Thermal diffusivity of the air [1.9 × 10^-5 m2/(30min)]
-q(18) = 1.51e-5;        % Kinematic viscosity of air [1.51 × 10^-5 m2/s]
-q(19) = 0.018;          % Molecular mass of water [0.018 kg mol-1]
-q(20) = 8.314e-3;       % Gas constant [8.314e-3 m^3 kPa K-1 mol-1]
+q(15) = 1.093;          % Density of air [kg/m3]
+q(16) = 1005;           % Specific heat of air [J/kg/K]
+q(17) = 60*60*1.9e-5;   % Thermal diffusivity of the air [m2/(h)]
+q(18) = 1.51e-5;        % Kinematic viscosity of air [m2/s]
+q(19) = 0.018;          % Molecular mass of water [kg/mol]
+q(20) = 8.314e-3;       % Gas constant [m3 kPa/K/mol]
 q(21) = 0.41;           % In pine, a specific gravity of 0.41 is low density 
                         % while one with a ratio of 0.62 is considered to be 
                         % very high.) [B. Zobel, in Encyclopedia of Forest Sciences, 2004]
-q(22) = 4200;           % Specific heat of water [4200 J/K/kg]
+q(22) = 4200;           % Specific heat of water [J/K/kg]
 q(24) = 0.5;            % Vegetation contribution coefficient [0:1] 0.5**
-q(25) = 1000;           % Density of water [1000 kg/m3]
+q(25) = 1000;           % Density of water [kg/m3]
 
 %% Forcing variables
 
@@ -58,7 +58,7 @@ end
 
 T_a         = p1(b1:a1,1);    % Air Temperature [K]
 L_dn        = p1(b1:a1,2);    % Downwelling longwave radiation (J/h/m2)
-K_d_diff    = p1(b1:a1,3);    % Diffuse shor twave radiation [J/h/m2]
+K_d_diff    = p1(b1:a1,3);    % Diffuse shortwave radiation [J/h/m2]
 K_d_dir     = p1(b1:a1,4);    % Direct short wave radiation [J/h/m2]
 k_d         = p1(b1:a1,5);    % Total short wave radiation [J/h/m2]
 alp_sha     = p1(b1:a1,6);    % Area of the shadow cast by the stick on a horizontal plane [m2]
@@ -113,13 +113,13 @@ end
 
 T_o     = cu(:,1);  % Temperature of the outer layer [K]
 T_c     = cu(:,2);  % Temperature of the core [K]
-m_o     = cu(:,3);  % Moisture of the outer layer [kg/s]
-m_c     = cu(:,4);  % Moisture of the core [kg/s]
+m_o     = cu(:,3);  % Moisture of the outer layer [kg/h]
+m_c     = cu(:,4);  % Moisture of the core [kg/h]
 f       = p(1);
 we      = 0.045;    % Weight of the stick [kg]
-rho_s   = q(1);   % Stick density (400 [kg/m3], Nelson, 2000)
-L       = q(2);   % Length of stick [0.41 m]
-r       = q(3);   % Radius of stick [0.0065 m]
+rho_s   = q(1);   % Stick density ([kg/m3])
+L       = q(2);   % Length of stick [m]
+r       = q(3);   % Radius of stick [m]
 V_t     = pi*L*r^2;         % Total volume of the stick [m3]
 m_s     = (f.*m_o + (1-f).*m_c)*100/(rho_s*V_t); % [fraction]
 
