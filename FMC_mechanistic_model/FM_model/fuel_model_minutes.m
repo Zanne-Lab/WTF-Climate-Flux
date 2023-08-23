@@ -34,8 +34,8 @@ alp_s       = q(13);  % Stick Albedo [0.65]
 alp_g       = q(14);  % Ground albedo [0.185]
 rho_a       = q(15);  % Density of air [1.093 kg/m3]
 c_a         = q(16);  % Specific heat of air [1005 J/kg/K]
-k           = q(17);  % Thermal diffusivity of the air [m2/(h)]
-v           = q(18);  % Kinematic viscosity of air [m2/d]
+k           = q(17);  % Thermal diffusivity of the air [m2/h]
+v           = q(18);  % Kinematic viscosity of air [m2/h]
 M           = q(19);  % Molecular mass of water [0.018 kg mol-1]
 R           = q(20);  % Gas constant [8.314e-3 m^3 kPa K-1 mol-1]
 g           = q(21);  % Specific gravity of the stick [0.42]
@@ -96,7 +96,7 @@ N_u     = 0.17.*R_e.^0.62;                         % Nusselt number
 omega   = 2.*r.*(k.*N_u).^(-1);                    % Aerodynamic resistance [(h)/m]
 Q_h     = rho_a.*c_a.*(T_o-T_a).*omega.^(-1);      % Sensible heat flux [J/(h)/m2]
 
-% Water vapour and latent heat flux [kg/m2/(h)] 
+% Water vapor and latent heat flux [kg/m2/(h)] 
 RH_surf = exp(-4.19.*M.*(exp(m_o_1.*B + A)).*(R.*T_o).^(-1));
 q_surf = q_sat.*RH_surf;
 E = (q_surf - q_a).*(omega.^(-1)); % Vapour mass flux [kg/m2/(h)]
@@ -110,13 +110,13 @@ Q_e         = (lambda_vap + lambda_sorp).*E;  % Latent energy flux [J/(h)/m2]
 % Conduction [J/(h)]
 ro_mid  = (r_c + r)/2; % Mid-point radius of the outer layer
 rc_mid  = r_c/2; % Mid-point radius of the core
-k_s     = (g.*(0.1941 + 0.004064.*m_s*100) + 0.01864)*3600; % Bulk con- ductivity of the stick [J/m/(h)/K]
+k_s     = (g.*(0.1941 + 0.004064.*m_s*100) + 0.01864)*3600; % Bulk conductivity of the stick [J/m/(h)/K]
 C       = 2*pi*L*k_s*(T_o-T_c).*(log(ro_mid/rc_mid)).^(-1); % Flux of heat between the two layers
 
 % Stick specific heat calculation c_s  [J/K/kg]
 T_s     = f.*T_o + (1 - f).*T_c; % Average stick temperature [K]
 c_wood  = 103.1 + 3.867.*T_s;   % Specific heat of dry wood [J/K/kg]
-c_bound = (23.55 * T_s - 1320*m_s - 6191)*m_s; % Energy absorbed by the bound water below the fibre saturation point [J/K/kg]
+c_bound = (23.55 * T_s - 1320*m_s - 6191)*m_s; % Energy absorbed by the bound water below the fiber saturation point [J/K/kg]
 c_s     = (c_wood + m_s.*c_water).*(1+m_s).^(-1) + c_bound; 
 
 % Diffusion [kg/(h)]
@@ -124,11 +124,11 @@ D = 2*pi*L*d_s*rho_s.*(m_o_1-m_c_1)./(log(ro_mid/rc_mid)); % Rate of diffusion i
 
 % Precipitation [kg/(h)]
 
-% P_inc = min(rain.*r.*L,m_max.*rho_s.*V_o-max(0,m_o+(-a_o.*E-D)));  % Absorbed precipitation [kg/d]
+% P_inc = min(rain.*r.*L,m_max.*rho_s.*V_o-max(0,m_o+(-a_o.*E-D)));  % Absorbed precipitation [kg/h]
 P_inc = min(rain.*r.*L.*dv,m_max.*rho_s.*V_o-max(0,m_o));  % Absorbed precipitation [kg/h]
 
-% P_abs = max(0,P_inc); % Absorbed precipitation [kg/d]
-P_abs = P_inc; % Absorbed precipitation [kg/d]
+% P_abs = max(0,P_inc); % Absorbed precipitation [kg/h]
+P_abs = P_inc; % Absorbed precipitation [kg/h]
 
 %% ODE system 
 
