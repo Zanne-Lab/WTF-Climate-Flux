@@ -56,7 +56,7 @@ FMC_sim <- read_csv("FMC_mechanistic_model/fuel_moisture_output_t3.csv") %>%
 time_flux <- read_csv("bayesian_model/pred_model_3_2000.csv") %>%
   #separate(1,into=c("Estimate","Est.Error","Q2.5","Q97.5"),sep=",") %>%
   mutate_at(c("Estimate","Est.Error","Q2.5","Q97.5"),as.numeric) 
-int_mass_loss <- read_csv("mass_loss_model_3.csv") %>%
+int_mass_loss <- read_csv("bayesian_model/mass_loss_model_3.csv") %>%
   #separate(1,into=c("site","months","Carbon_por"),sep=",") %>%
   rename(months = Months,
          Carbon_por = V3) %>%
