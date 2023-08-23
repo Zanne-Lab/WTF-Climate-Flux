@@ -52,7 +52,7 @@ phi             = ele_angle;    % Solar elevation angle (radians)
 pr              = press;        % Mean air pressure (mb)
 K_d_max         = K_solar.*tau.^(pr./p_sea).*sin(phi); % Theoretical maximum solar radiation achievable 
 n               = k_d./K_d_max; % Clearness index "n"
-r               = 0.035;        % Height of log of wood [0.05 m]
+r               = 0.035;        % Height of log of wood [m]
 L               = 0.010;        % Length/width of log of wood]
 psi             = azi_angle;    % Solar azimuth angle (radians)
 z1              = 2*r;          % Height of the stick (m)
@@ -156,7 +156,7 @@ p1(6,:)     = alp_sha;
 u           = wind.*log((z1-zh)/zo).*(log((z2-zh)./zo)).^(-1); %  Wind speed regression calculation
 p1(7,:)     = u;
 
-%% Saturation vapour density in [kg/m3]
+%% Saturation vapor density in [kg/m3]
 
 e_0         = 0.61094.*exp(17.625.*air_temp./(air_temp+243.04)); % Saturation vapor pressure (kPa) [Koutsoyiannis, D. (2012)]
 q_sat       = e_0*M./(R*T_a); % Saturation vapour density (kg/m3)
