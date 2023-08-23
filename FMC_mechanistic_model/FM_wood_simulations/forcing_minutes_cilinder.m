@@ -31,11 +31,11 @@ end
 %% Calling raw data %%
 
 fuel_moisture   = data(:,3);        % Fuel moisture (%)
-air_temp        = data(:,8);        % Averaged air temperature (°C)
+air_temp        = data(:,8);        % Averaged air temperature (Â°C)
 precip          = data(:,5);        % Precipitation (mm)
 press           = data(:,6);        % Mean air pressure (mb)
 rel_hum         = data(:,7);        % Relative humidity (%)
-wind            = data(:,9);        % Mean daily wind speed (m/h)
+wind            = data(:,9);        % Mean daily wind speed (m/s)
 wind_height     = 2;                % Wind speed height observation (m)
 ele_angle       = data(:,13)*pi/180; % Solar elevation angle (radians)
 azi_angle       = data(:,14)*pi/180;% Solar azimuth angle (radians)
@@ -61,7 +61,7 @@ zo              = 0.004;        % Surface roughness (m)**
 z2              = wind_height;  % Height where the wind speed is measured (m)
 M               = 0.018;        % Molecular mass of water [kg mol-1]
 R               = 8.314e-3;     % Gas constant [m^3 kPa K-1 mol-1]
-ep              = p(6);         % Empirical coefficien
+ep              = p(6);         % Empirical coefficient
 
 %% Averaged air temperature [K] : 
 
@@ -151,7 +151,7 @@ alp_sha(find(alp_sha==Inf)) = 1;
 
 p1(6,:)     = alp_sha; 
 
-%% Wind speed [m/d]
+%% Wind speed [m/s]
 
 u           = wind.*log((z1-zh)/zo).*(log((z2-zh)./zo)).^(-1); %  Wind speed regression calculation
 p1(7,:)     = u;
@@ -169,7 +169,7 @@ p1(9,:)     = q_a;   % Vapour density of the ambient air (kg/m3)
 H_p         = e_0*10./T_a; % Humidity parameter [hPa/K]
 p1(10,:)    = H_p;         % Humidity parameter [hPa/K]
 
-%% Incident precipitation rate [kg/(30 min)/m2]
+%% Incident precipitation rate [kg/(h)/m2]
 
 p1(11,:) = precip/1000;
 
