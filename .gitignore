@@ -10,9 +10,7 @@ weather_flux/data/processed/wood_respiration/CO2_IRGA_raw.pdf
 weather_flux/data/processed/wood_respiration/CH4_IRGA_raw.pdf
 weather_flux/data/processed/wood_respiration/CO2_IRGA_clean.pdf
 weather_flux/data/processed/wood_respiration/CH4_IRGA_clean.pdf
-weather_flux/data/processed/wood_respiration/pine_CH4_clean.csv
 weather_flux/data/processed/wood_respiration/pine_CH4_IRGA.pdf
-weather_flux/data/processed/wood_respiration/native_CH4_clean.csv
 weather_flux/data/processed/wood_respiration/native_CH4_IRGA.pdf
 weather_flux/data/processed/svf_pics/**
 !weather_flux/data/processed/svf_pics/svf_pine.csv
