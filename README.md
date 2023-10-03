@@ -1,5 +1,5 @@
 # WTF-Climate-Flux
-This repository contains the data and code associated with the manuscript "Wood microclimate as a predictor of carbon dioxide fluxes from deadwood in tropical Australia."
+This repository contains the data and code associated with the manuscript "Wood microclimate as a predictor of carbon dioxide fluxes from deadwood in tropical Australia." The preprint is available on EGUsphere: https://doi.org/10.5194/egusphere-2023-1952.
 ## Project Description
 This projects aims to predict carbon dioxide fluxes from tropical deadwood using microclimate variables, defined here as wood moisture content and temperature. Using climate data, we simulated wood microclimate variables with a mechanistic fuel moisture content model. Then, we developed a Bayseian statistical relationship between wood microclimate variables and carbon dioxide flux to predict flux rates at a 1-hour temporal resolution across a 4-year time period. We validated our simulations by estimating cumulative carbon fluxes and comparing them to measuring mass loss from wood blocks.
 ![](figures/PNG/Fig1_conceptual.png)
