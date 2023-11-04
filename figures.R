@@ -149,11 +149,15 @@ FMC_cal2 <- FMC_cal %>%
                                site=="STCK" ~ "Wet savanna",
                                site=="PNW" ~ "Dry savanna"))
 
-block_FMC <- pine_flux %>%
+block_MC <- pine_flux %>%
   mutate(date = as_datetime(paste(harvest_date,"12:00:00"))) %>%
   group_by(site,site_desc,date) %>%
-  summarize(FMC = mean(FMC,na.rm=TRUE),
-            sd_FMC = sd(FMC,na.rm=TRUE)) %>%
+  rename(FMC_block = FMC) %>%
+  summarize(FMC = mean(FMC_block,na.rm=TRUE),
+            sd_FMC = sd(FMC_block,na.rm=TRUE),
+            n = n()) %>%
+  mutate(n = as.numeric(n),
+         se_FMC = sd_FMC/sqrt(n)) %>%
   rbind(FMC_cal2) %>%
   filter(site!="HQ_AWC")
 
@@ -163,7 +167,11 @@ sim_rain <- ggplot() +
            stat="identity",color="blue") +
   geom_line(data=FMC_sim,mapping=aes(date,fuel_block,color="Simulations"),
             alpha=0.7) +
-  geom_point(data=block_FMC,mapping=aes(date,FMC,color="Measurements"),
+  geom_errorbar(data=block_MC,mapping=aes(x=date,
+                                          ymin=FMC-se_FMC,
+                                          ymax=FMC+se_FMC),
+                color=p_pira,alpha=0.75) +
+  geom_point(data=block_MC,mapping=aes(date,FMC,color="Measurements"),
              shape=17,size=1.8) +
   scale_color_manual(values=c("Simulations" = p_block,
                               "Measurements"=p_pira)) +
@@ -193,10 +201,26 @@ FMC_sim_t <- FMC_sim %>%
   mutate(Model = case_when(var=="wood_temp" ~ "Simulations",
                            var=="ib_AirTC_Avg" ~ "Air temperature"))
 
+block_T <- pine_flux %>%
+  mutate(date = as_datetime(paste(harvest_date,"12:00:00"))) %>%
+  group_by(site,site_desc,date) %>%
+  summarize(Tcham = mean(mean_Tcham,na.rm=TRUE),
+            sd_Tcham = sd(mean_Tcham,na.rm=TRUE),
+            n = n()) %>%
+  mutate(n = as.numeric(n),
+         se_Tcham = sd_Tcham/sqrt(n))
+
 sim_temp <- ggplot() + 
   geom_line(data=FMC_sim_t,mapping=aes(date,temp,color=Model),
             alpha=0.5) +
+  geom_point(data=block_T,mapping=aes(date,Tcham,fill="Measurements"),
+             shape=24,size=1.8,color="white",stroke=0.3) +
+  geom_errorbar(data=block_T,mapping=aes(x=date,
+                                         ymin=Tcham-se_Tcham,
+                                         ymax=Tcham+se_Tcham),
+                color=p_pira,alpha=0.75) +
   scale_color_manual(values=c("red",p_block)) +
+  scale_fill_manual(values=p_pira) +
   xlab("Date") +
   scale_y_continuous(name="Wood temperature (°C)",
                      sec.axis=sec_axis(~.,name="Air temperature (°C)")) +
