@@ -172,7 +172,7 @@ sim_rain <- ggplot() +
                                           ymax=FMC+se_FMC),
                 color=p_pira,alpha=0.75) +
   geom_point(data=block_MC,mapping=aes(date,FMC,color="Measurements"),
-             shape=17,size=1.8) +
+             shape=17,size=2) +
   scale_color_manual(values=c("Simulations" = p_block,
                               "Measurements"=p_pira)) +
   xlab("Date") + 
@@ -214,13 +214,13 @@ sim_temp <- ggplot() +
   geom_line(data=FMC_sim_t,mapping=aes(date,temp,color=Model),
             alpha=0.5) +
   geom_point(data=block_T,mapping=aes(date,Tcham,fill="Measurements"),
-             shape=24,size=1.8,color="gray80",stroke=0.5) +
+             shape=24,size=2,color=p_pira,stroke=0.3) +
   geom_errorbar(data=block_T,mapping=aes(x=date,
                                          ymin=Tcham-se_Tcham,
                                          ymax=Tcham+se_Tcham),
                 color=p_pira,alpha=0.75) +
   scale_color_manual(values=c("red",p_block)) +
-  scale_fill_manual(values=p_pira) +
+  scale_fill_manual(values="gray90") +
   xlab("Date") +
   scale_y_continuous(name="Wood temperature (°C)",
                      sec.axis=sec_axis(~.,name="Air temperature (°C)")) +
