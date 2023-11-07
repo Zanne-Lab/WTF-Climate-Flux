@@ -214,7 +214,7 @@ sim_temp <- ggplot() +
   geom_line(data=FMC_sim_t,mapping=aes(date,temp,color=Model),
             alpha=0.5) +
   geom_point(data=block_T,mapping=aes(date,Tcham,fill="Measurements"),
-             shape=24,size=1.8,color="white",stroke=0.3) +
+             shape=24,size=1.8,color="gray80",stroke=0.5) +
   geom_errorbar(data=block_T,mapping=aes(x=date,
                                          ymin=Tcham-se_Tcham,
                                          ymax=Tcham+se_Tcham),
