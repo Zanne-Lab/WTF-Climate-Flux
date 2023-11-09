@@ -786,3 +786,59 @@ tbl_regression(ML_f) %>%
   as_kable_extra(escape=FALSE,format="latex") %>%
   cat()
 
+
+#..S. Calibration Stat ####
+MC_cal <- FMC_sim %>%
+  select(site,date,site_desc,fuel_stick) %>%
+  left_join(select(wthr_FMC,site,date,FuelM_Avg),by=c("site","date")) %>%
+  mutate(Difference = FuelM_Avg-fuel_stick)
+
+MC_cal2 <- MC_cal %>%
+  select(-Difference) %>%
+  pivot_longer(!c(date,site,site_desc),
+               names_to="var",values_to="FMC") %>%
+  mutate(var = ifelse(var=="fuel_stick","Stick Simulations",
+                           "Stick Observations"))
+
+cal <- ggplot(MC_cal2,aes(date,FMC,color=var)) +
+  geom_line(alpha=0.6) +
+  geom_line(data=filter(MC_cal2,var=="Stick Observations"),
+            aes(x=date,y=FMC),color=p_stick,alpha=0.2) +
+  scale_color_manual(values=c(p_stick,p_block)) +
+  xlab("Date") + ylab("FMC (%)") +
+  facet_wrap2(~fct_relevel(site_desc,"Wet rainforest",
+                           "Dry rainforest","Sclerophyll",
+                           "Wet savanna","Dry savanna"),
+              nrow=1,strip=site_str) +
+  fig_aes +
+  theme(legend.position = "top",
+        legend.title = element_blank())
+
+cal_dif <- ggplot(MC_cal,aes(date,Difference,color="FMC Difference (Observed - Simulated)")) +
+  geom_point(alpha=0.3,size=0.5) +
+  geom_hline(yintercept=0,linetype="dashed",color="black") +
+  scale_color_manual(values=c("FMC Difference (Observed - Simulated)" = p_block)) +
+  xlab("Date") + ylab("FMC (%)") +
+  facet_wrap2(~fct_relevel(site_desc,"Wet rainforest",
+                           "Dry rainforest","Sclerophyll",
+                           "Wet savanna","Dry savanna"),
+              nrow=1,strip=site_str) +
+  fig_aes +
+  theme(legend.position = "top",
+        legend.title = element_blank())
+
+S_cal <- plot_grid(cal,cal_dif,
+                  nrow=2,ncol=1,
+                  labels = c("A","B"),
+                  label_size = 16)
+
+pdf("figures/S_calibration.pdf",width=12,height=6.75)
+print(S_cal)
+dev.off()
+
+png("figures/PNG/S_calibration.png",width=3500,height=1969,res=300)
+print(S_cal)
+dev.off()
+
+
+
