@@ -53,7 +53,7 @@ FMC_sim <- read_csv("FMC_mechanistic_model/fuel_moisture_output_t3.csv") %>%
                                site=="STCK" ~ "Wet savanna",
                                site=="PNW" ~ "Dry savanna")) %>%
   filter(site!="HQ_AWC")
-time_flux <- read_csv("bayesian_model/pred_model_3_2000.csv") %>%
+time_flux <- read_csv("bayesian_model/for_mass_loss_model_3_300.csv") %>%
   #separate(1,into=c("Estimate","Est.Error","Q2.5","Q97.5"),sep=",") %>%
   mutate_at(c("Estimate","Est.Error","Q2.5","Q97.5"),as.numeric) 
 int_mass_loss <- read_csv("bayesian_model/mass_loss_model_3.csv") %>%
@@ -131,7 +131,7 @@ FMC_sim_m <- FMC_sim %>%
   select(-FMC_nor,-temp_stick,-temp_wood) %>%
   pivot_longer(!c(date,site,site_desc),names_to="var",values_to="FMC") %>%
   mutate(Model = case_when(var=="fuel_stick" ~ "Stick FMC",
-                           var=="fuel_block" ~ "Block Moisture Content"))
+                           var=="fuel_wood" ~ "Block Moisture Content"))
 
 # Reformat stick/block calibration data
 FMC_cal2 <- FMC_cal %>%
@@ -165,7 +165,7 @@ sim_rain <- ggplot() +
   geom_bar(data=filter(wthr_FMC, Rain_mm_Tot > 0),
            mapping=aes(date,Rain_mm_Tot),
            stat="identity",color="blue") +
-  geom_line(data=FMC_sim,mapping=aes(date,fuel_block,color="Simulations"),
+  geom_line(data=FMC_sim,mapping=aes(date,fuel_wood,color="Simulations"),
             alpha=0.7) +
   geom_errorbar(data=block_MC,mapping=aes(x=date,
                                           ymin=FMC-se_FMC,
@@ -188,7 +188,7 @@ sim_rain <- ggplot() +
 
 #....Wood temp + surface air temp ####
 FMC_sim_t <- FMC_sim %>%
-  select(-FMC_nor,-fuel_stick,-fuel_block) %>%
+  select(-FMC_nor,-fuel_stick,-fuel_wood) %>%
   pivot_longer(!c(date,site,site_desc),names_to="var",values_to="wood_temp") %>%
   mutate(Model = case_when(var=="temp_stick" ~ "Stick Temperature",
                            var=="temp_wood" ~ "Block Temperature"),
@@ -394,7 +394,7 @@ dev.off()
 #..Fig 6. Natives and FMC/Flux Simulations ####
 sim_flux <- data.frame(site = FMC_sim$site,
                        site_desc = FMC_sim$site_desc,
-                       Block_FMC = FMC_sim$fuel_block,
+                       Block_FMC = FMC_sim$fuel_wood,
                        Sim_CO2 = time_flux$Estimate,
                        Sim_Q2.5 = time_flux$Q2.5,
                        Sim_Q97.5 = time_flux$Q97.5)
@@ -680,7 +680,7 @@ dev.off()
 #..S5. Natives vs models temp ####
 sim_flux <- data.frame(site = FMC_sim$site,
                        site_desc = FMC_sim$site_desc,
-                       Block_FMC = FMC_sim$fuel_block,
+                       Block_FMC = FMC_sim$fuel_wood,
                        Block_temp = FMC_sim$temp_wood-273.15,
                        Sim_CO2 = time_flux$Estimate,
                        Sim_Q2.5 = time_flux$Q2.5,

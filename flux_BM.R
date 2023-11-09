@@ -17,13 +17,11 @@ pine_flux <- read_csv("weather_flux/data/processed/wood_respiration/pine_CO2_cle
   filter(CO2_resp_rate > 0)
 
 FMC_sim <- read_csv("FMC_mechanistic_model/fuel_moisture_output.csv") %>%
-  separate(1,into=c("site","date","fuel_stick","fuel_block",
-                    "temp_stick","temp_wood"),sep=";") %>%
-  mutate_at(c("fuel_stick","fuel_block",
+  mutate_at(c("fuel_stick","fuel_wood",
               "temp_stick","temp_wood"),as.numeric) %>%
   mutate(date = as_datetime(date)) %>%
   filter(site!="HQ_AWC") %>%
-  mutate(FMC_nor = fuel_block/max(pine_flux$FMC))
+  mutate(FMC_nor = fuel_wood/max(pine_flux$FMC))
 FMC_sim$site[FMC_sim$site=="STICK"] <- "STCK"
 write_csv(FMC_sim,"FMC_mechanistic_model/fuel_moisture_output_t3.csv")
 
