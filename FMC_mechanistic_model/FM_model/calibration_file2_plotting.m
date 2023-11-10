@@ -6,7 +6,7 @@ q(1)  = 400;            % Stick density (400 [kg/m3], Nelson, 2000)
 q(2)  = 0.41;           % Length of stick [0.41 m]
 q(3)  = 0.0065;         % Radius of stick [0.0065 m]
 q(4)  = 0.85;           % Stick emissivity [0.85]
-q(5)  = 60*60*5.67e-8;  % Stephan-Boltzmann constant [5.67e-8 J/m2/K4/(h)]
+q(5)  = 60*60*5.67e-8;  % Stephan-Boltzmann constant [5.67e-8 J/m2/K4/(30min)]
 q(6)  = 0.95;           % Emissivity of the ground [0.95]
 q(7)  = 0.965;          % Emissivity of the vegetation [0.965]
 q(8)  = 1.2;            % Fit parameter 1 [1.2]
@@ -18,8 +18,8 @@ q(13) = 0.65;           % Stick Albedo [0.65]
 q(14) = 0.185;          % Ground albedo [0.185]
 q(15) = 1.093;          % Density of air [1.093 kg/m3]
 q(16) = 1005;           % Specific heat of air [1005 J/kg/K]
-q(17) = 60*60*1.9e-5;   % Thermal diffusivity of the air [1.9 Ã— 10^-5 m2/(h)]
-q(18) = 1.51e-5;        % Kinematic viscosity of air [1.51 Ã— 10^-5 m2/s]
+q(17) = 60*60*1.9e-5;   % Thermal diffusivity of the air [1.9 × 10^-5 m2/(30min)]
+q(18) = 1.51e-5;        % Kinematic viscosity of air [1.51 × 10^-5 m2/s]
 q(19) = 0.018;          % Molecular mass of water [0.018 kg mol-1]
 q(20) = 8.314e-3;       % Gas constant [8.314e-3 m^3 kPa K-1 mol-1]
 q(21) = 0.42;           % Specific gravity of the stick [0.42]
@@ -92,7 +92,8 @@ c(4) = 0.1*(q(1)*pi*q(2)*q(3)^2);     % Moisture of the core [kg]
      warning off 
      tic
      [ty,cu] = ode15s(@(t,x)fuel_model_minutes(t,x,p,q,T_a,L_dn,K_d_diff,K_d_dir,k_d,alp_sha,u,q_a,q_sat,H_p,rain,m,tspan), tspan1, c, o_opts);
-     
+     figure;
+     length(cu)
  catch ME
      warning off
      ty = length(tspan);
@@ -111,8 +112,8 @@ end
 
 T_o     = cu(:,1);  % Temperature of the outer layer [K]
 T_c     = cu(:,2);  % Temperature of the core [K]
-m_o     = cu(:,3);  % Moisture of the outer layer [kg/h]
-m_c     = cu(:,4);  % Moisture of the core [kg/h]
+m_o     = cu(:,3);  % Moisture of the outer layer [kg/s]
+m_c     = cu(:,4);  % Moisture of the core [kg/s]
 f       = p(1);
 we      = 0.045;    % Weight of the stick [kg]
 rho_s   = q(1);   % Stick density (400 [kg/m3], Nelson, 2000)
@@ -123,6 +124,6 @@ m_s     = (f.*m_o + (1-f).*m_c)*100/(rho_s*V_t); % [fraction]
 
 %% Plotting %%
 
-output = [ty ty m_s T_o T_c m_o m_c fuel_moist T_a rain];
+output = [tspan' tspan' m_s T_o T_c m_o m_c fuel_moist T_a rain];
 
 end
