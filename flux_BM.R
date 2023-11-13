@@ -385,7 +385,6 @@ M8.3  <- read_csv("pred.3h.csv")
 M9.3  <- read_csv("pred.3i.csv")
 M10.3 <- read_csv("pred.3j.csv")
 
-
 pred_model_3_2000  = as.data.frame(rbind(M1.3,M2.3,M3.3,M4.3,M5.3,M6.3,M7.3,M8.3,M9.3,M10.3))
 write_csv(pred_model_3_2000,"bayesian_model/pred_model_3_2000.csv")
 
@@ -407,27 +406,21 @@ dev.off()
 #h_M2A_1000
 #dev.off()
 
-
 conditions <- data.frame(site = unique(pine_flux$site))
 rownames(conditions) <- unique(pine_flux$site)
 me_fit <- conditional_effects(model_3, conditions = conditions,re_formula = NULL, method = "predict")
 
-
 bayes_R2(model_3) %>% round(digits = 3) 
 
-
-
-
-# Final model: Model 3 (FMC*T_nor + site, with dependent variable with a beta distribution) ####
-# Save files for plotting
 effects_m <- me_fit[[1]] %>%
   mutate(effect1__ = effect1__*max(pine_flux$FMC))
 effects_t <- me_fit[[2]] %>%
-  mutate(effect1__ = effect1__*max(FMC_sim$temp_wood) - 273.15)
+  mutate(effect1__ = effect1__*max(FMC_sim$T_wood)- 273.15)
 effects_mt <- me_fit[[3]] %>%
   mutate(effect1__ = effect1__*max(pine_flux$FMC),
-         effect2__ = (as.numeric(as.character(effect2__))*max(FMC_sim$temp_wood)) - 273.15)
-write_csv(effects_m,"bayesian_model/bm_fits_m.csv")
-write_csv(effects_t,"bayesian_model/bm_fits_t.csv")
-write_csv(effects_mt,"bayesian_model/bm_fits_mt.csv")
+         effect2__ = (as.numeric(as.character(effect2__))*max(FMC_sim$T_wood))- 273.15)
+		 
+write_csv(effects_m,"bm_fits_m.csv")
+write_csv(effects_t,"bm_fits_t.csv")
+write_csv(effects_mt,"bm_fits_mt.csv")
 

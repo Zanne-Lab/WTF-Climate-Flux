@@ -1,0 +1,438 @@
+MATLAB is selecting SOFTWARE OPENGL rendering.
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2020 The MathWorks, Inc.
+                  R2020a (9.8.0.1323502) 64-bit (glnxa64)
+                             February 25, 2020
+
+ 
+To get started, type doc.
+For product information, visit www.mathworks.com.
+ 
+MLRF 
+
+SSE =
+
+   75.0417
+
+MLRF 
+
+SSE =
+
+   75.0398
+
+MLRF 
+
+SSE =
+
+   75.0356
+
+MLRF 
+
+SSE =
+
+   75.0354
+
+MLRF 
+
+SSE =
+
+   75.0411
+
+MLRF 
+
+SSE =
+
+   75.0368
+
+MLRF 
+
+SSE =
+
+   75.0388
+
+MLRF 
+
+SSE =
+
+   75.0417
+
+MLRF 
+
+SSE =
+
+  4.5939e+102
+
+MLRF 
+
+SSE =
+
+  4.5939e+102
+
+MLRF 
+
+SSE =
+
+  4.5939e+102
+
+MLRF 
+
+SSE =
+
+   75.6870
+
+MLRF 
+
+SSE =
+
+  4.5939e+102
+
+MLRF 
+
+SSE =
+
+  4.5939e+102
+
+MLRF 
+
+SSE =
+
+  4.5939e+102
+
+MLRF 
+
+SSE =
+
+   75.6846
+
+MLRF 
+
+SSE =
+
+   75.3454
+
+MLRF 
+
+SSE =
+
+   75.1932
+
+MLRF 
+
+SSE =
+
+   75.1117
+
+MLRF 
+
+SSE =
+
+   75.0765
+
+MLRF 
+
+SSE =
+
+   75.0583
+
+MLRF 
+
+SSE =
+
+   75.0477
+
+MLRF 
+
+SSE =
+
+   75.0432
+
+MLRF 
+
+SSE =
+
+   75.0381
+
+MLRF 
+
+SSE =
+
+   75.0417
+
+MLRF 
+
+SSE =
+
+   75.0361
+
+MLRF 
+
+SSE =
+
+   75.0333
+
+MLRF 
+
+SSE =
+
+   75.0413
+
+MLRF 
+
+SSE =
+
+   75.0383
+
+MLRF 
+
+SSE =
+
+   75.0404
+
+MLRF 
+
+SSE =
+
+   75.0381
+
+MLRF 
+
+SSE =
+
+  4.5939e+102
+
+MLRF 
+
+SSE =
+
+   75.0427
+
+MLRF 
+
+SSE =
+
+   75.0386
+
+MLRF 
+
+SSE =
+
+   75.0385
+
+MLRF 
+
+SSE =
+
+   75.0413
+
+MLRF 
+
+SSE =
+
+   75.0481
+
+MLRF 
+
+SSE =
+
+   75.0395
+
+MLRF 
+
+SSE =
+
+   75.0432
+
+MLRF 
+
+SSE =
+
+   75.0390
+
+MLRF 
+
+SSE =
+
+   75.0428
+
+MLRF 
+
+SSE =
+
+   75.0410
+
+MLRF 
+
+SSE =
+
+   75.0422
+
+MLRF 
+
+SSE =
+
+   75.0391
+
+MLRF 
+
+SSE =
+
+   75.0364
+
+MLRF 
+
+SSE =
+
+   75.0465
+
+MLRF 
+
+SSE =
+
+   75.0433
+
+MLRF 
+
+SSE =
+
+   75.0348
+
+MLRF 
+
+SSE =
+
+   75.0427
+
+MLRF 
+
+SSE =
+
+   75.0406
+
+MLRF 
+
+SSE =
+
+   75.0439
+
+MLRF 
+
+SSE =
+
+   75.0364
+
+MLRF 
+
+SSE =
+
+   79.6311
+
+MLRF 
+
+SSE =
+
+   75.0399
+
+MLRF 
+
+SSE =
+
+   75.0396
+
+MLRF 
+
+SSE =
+
+   75.0414
+
+MLRF 
+
+SSE =
+
+   75.0397
+
+MLRF 
+
+SSE =
+
+   75.0434
+
+MLRF 
+
+SSE =
+
+   75.0391
+
+MLRF 
+
+SSE =
+
+   75.0431
+
+MLRF 
+
+SSE =
+
+   75.0413
+
+MLRF 
+
+SSE =
+
+   75.0426
+
+MLRF 
+
+SSE =
+
+   75.0385
+
+MLRF 
+
+SSE =
+
+   75.0401
+
+MLRF 
+
+SSE =
+
+   75.0385
+
+MLRF 
+
+SSE =
+
+   75.0402
+
+MLRF 
+
+SSE =
+
+   75.0472
+
+MLRF 
+
+SSE =
+
+   75.0435
+
+MLRF 
+
+SSE =
+
+   75.0379
+
+MLRF 
+
+SSE =
+
+   75.0417
+
+
+Local minimum possible. Constraints satisfied.
+
+fmincon stopped because the size of the current step is less than
+the value of the step size tolerance and constraints are 
+satisfied to within the value of the constraint tolerance.
+
