@@ -550,9 +550,10 @@ fig7 <- ggplot(filter(ML_com_t,termite.attack=="No"),
                            "Dry rainforest","Sclerophyll",
                            "Wet savanna","Dry savanna"),
               nrow=1,strip=site_str) +
-  xlab("Carbon Loss (g C/g C)") +
-  ylab("Carbon Flux (g C/g C)") +
-  xlim(0,1) + ylim(0,1) +
+  xlab("Measured Carbon Loss (g C/g C)") +
+  ylab("Simulated Carbon Flux (g C/g C)") +
+  scale_x_continuous(limits=c(0,1),labels=c(0,0.25,0.5,0.75,1)) +
+  scale_y_continuous(limits=c(0,1),labels=c(0,0.25,0.5,0.75,1)) +
   fig_aes +
   theme(legend.position = "top")
 
@@ -623,9 +624,10 @@ fig8 <- ggplot(filter(ML_natives,termite.attack=="No"),
                      values=c("No"="gray5","Yes"="brown3")) +
   facet_wrap2(~title,
               strip = native_str) +
-  xlab("Carbon Loss (g C/g C)") +
-  ylab("Carbon Flux (g C/g C)") +
-  xlim(0,1) + ylim(0,1) +
+  xlab("Measured Carbon Loss (g C/g C)") +
+  ylab("Simulated Carbon Flux (g C/g C)") +
+  scale_x_continuous(limits=c(0,1),labels=c(0,0.25,0.5,0.75,1)) +
+  scale_y_continuous(limits=c(0,1),labels=c(0,0.25,0.5,0.75,1)) +
   fig_aes +
   theme(legend.position = "top")
 
