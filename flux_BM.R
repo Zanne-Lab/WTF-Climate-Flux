@@ -17,6 +17,10 @@ pine_flux <- read_csv("weather_flux/data/processed/wood_respiration/pine_CO2_cle
   filter(CO2_resp_rate > 0)
 
 FMC_sim <- read_csv("FMC_mechanistic_model/fuel_moisture_output.csv") %>%
+  rename(fuel_stick = F_sticks,
+         fuel_wood = FMC,
+         temp_stick=T_sticks,
+         temp_wood=T_wood) %>%
   mutate_at(c("fuel_stick","fuel_wood",
               "temp_stick","temp_wood"),as.numeric) %>%
   mutate(date = as_datetime(date)) %>%
