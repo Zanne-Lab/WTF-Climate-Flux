@@ -1,158 +1,136 @@
-model_1  = brm(CO2_resp_rate ~ FMC_nor + (1|site),data = pine_flux,iter = 3500,family ="beta",
-            control = list(adapt_delta = 0.96),seed=123)
+model_1  = brm(CO2_resp_rate ~ FMC_nor + (1|site),data = pine_flux,iter = 4200,family ="beta",
+               control = list(adapt_delta = 0.98),seed=123)
 > model_1$fit
-Inference for Stan model: 516dc2723972b0b4959c45f1ed5792b7.
-4 chains, each with iter=3500; warmup=1750; thin=1;
-post-warmup draws per chain=1750, total post-warmup draws=7000.
+Inference for Stan model: anon_model.
+4 chains, each with iter=4200; warmup=2100; thin=1; 
+post-warmup draws per chain=2100, total post-warmup draws=8400.
 
-                          mean se_mean    sd    2.5%     25%     50%     75%
-b_Intercept              -4.97    0.01  0.45   -5.78   -5.23   -5.00   -4.75
-b_FMC_nor                 1.53    0.00  0.26    1.01    1.35    1.53    1.70
-sd_site__Intercept        0.84    0.01  0.45    0.35    0.54    0.71    1.01
-phi                     100.97    0.17 10.43   80.83   93.87  100.75  107.72
-r_site[DRO,Intercept]     0.62    0.01  0.44   -0.38    0.40    0.63    0.87
-r_site[MLES,Intercept]    0.19    0.01  0.44   -0.82   -0.02    0.22    0.44
-r_site[MLRF,Intercept]    0.10    0.01  0.44   -0.92   -0.12    0.12    0.35
-r_site[PNW,Intercept]    -0.82    0.01  0.46   -1.89   -1.05   -0.79   -0.54
-r_site[STCK,Intercept]   -0.47    0.01  0.46   -1.50   -0.69   -0.44   -0.19
-lprior                  -14.96    0.01  0.31  -15.59  -15.15  -14.95  -14.76
-lp__                   1020.48    0.07  2.61 1014.67 1018.92 1020.74 1022.39
-                         97.5% n_eff Rhat
-b_Intercept              -3.97  1456    1
-b_FMC_nor                 2.02  4348    1
-sd_site__Intercept        1.98  1494    1
-phi                     122.09  3991    1
-r_site[DRO,Intercept]     1.44  1442    1
-r_site[MLES,Intercept]    1.01  1429    1
-r_site[MLRF,Intercept]    0.92  1365    1
-r_site[PNW,Intercept]    -0.01  1429    1
-r_site[STCK,Intercept]    0.35  1392    1
-lprior                  -14.39  2767    1
-lp__                   1024.64  1499    1
+                          mean se_mean    sd    2.5%     25%     50%     75%   97.5% n_eff Rhat
+b_Intercept              -4.97    0.01  0.42   -5.76   -5.22   -5.00   -4.75   -4.04  2125    1
+b_FMC_nor                 1.52    0.00  0.25    1.02    1.35    1.52    1.69    2.02  5350    1
+sd_site__Intercept        0.84    0.01  0.46    0.34    0.54    0.72    1.00    2.04  1974    1
+phi                     100.98    0.14 10.01   82.10   94.23  100.86  107.51  121.63  5068    1
+Intercept                -4.60    0.01  0.42   -5.40   -4.84   -4.62   -4.38   -3.68  2088    1
+r_site[DRO,Intercept]     0.62    0.01  0.42   -0.28    0.40    0.64    0.87    1.46  2139    1
+r_site[MLES,Intercept]    0.19    0.01  0.42   -0.74   -0.02    0.21    0.43    1.01  2108    1
+r_site[MLRF,Intercept]    0.09    0.01  0.42   -0.82   -0.13    0.11    0.33    0.92  2103    1
+r_site[PNW,Intercept]    -0.82    0.01  0.44   -1.79   -1.06   -0.79   -0.56   -0.05  2235    1
+r_site[STCK,Intercept]   -0.47    0.01  0.43   -1.42   -0.70   -0.44   -0.21    0.33  2245    1
+lprior                  -14.96    0.01  0.30  -15.62  -15.14  -14.95  -14.76  -14.42  3188    1
+lp__                   1020.61    0.07  2.61 1014.56 1019.07 1020.96 1022.50 1024.73  1566    1
 
-Samples were drawn using NUTS(diag_e) at Wed Nov  8 11:55:40 2023.
+Samples were drawn using NUTS(diag_e) at Thu Apr 11 17:25:24 2024.
 For each parameter, n_eff is a crude measure of effective sample size,
-and Rhat is the potential scale reduction factor on split chains (at
+and Rhat is the potential scale reduction factor on split chains (at 
 convergence, Rhat=1).
 
 > p_map(model_1)
-MAP-based p-value
+MAP-based p-value 
 
 Parameter   | p (MAP)
 ---------------------
 (Intercept) |  < .001
 FMC_nor     |  < .001
 
->  bayes_R2(model_1) %>% round(digits = 3)
+> bayes_R2(model_1) %>% round(digits = 3)
    Estimate Est.Error  Q2.5 Q97.5
-R2    0.341     0.039 0.266 0.416
+R2    0.342     0.039 0.265 0.415
 
 model_2  = brm(CO2_resp_rate ~ FMC_nor + T_nor + (1|site),data = pine_flux,iter = 5000,family ="beta", 
-              control = list(adapt_delta = 0.96),seed=123)
+               control = list(adapt_delta = 0.98),seed=123)
 > model_2$fit
-Inference for Stan model: 516dc2723972b0b4959c45f1ed5792b7.
-4 chains, each with iter=5000; warmup=2500; thin=1;
+Inference for Stan model: anon_model.
+4 chains, each with iter=5000; warmup=2500; thin=1; 
 post-warmup draws per chain=2500, total post-warmup draws=10000.
 
-                          mean se_mean    sd    2.5%     25%     50%     75%
-b_Intercept             -11.82    0.04  3.54  -18.76  -14.26  -11.84   -9.46
-b_FMC_nor                 1.71    0.00  0.26    1.19    1.53    1.71    1.88
-b_T_nor                   7.68    0.05  3.93   -0.06    5.06    7.67   10.36
-sd_site__Intercept        0.95    0.01  0.51    0.40    0.62    0.82    1.14
-phi                     103.84    0.11 10.54   83.99   96.56  103.55  110.84
-r_site[DRO,Intercept]     0.60    0.01  0.48   -0.46    0.37    0.63    0.87
-r_site[MLES,Intercept]    0.27    0.01  0.48   -0.78    0.03    0.29    0.55
-r_site[MLRF,Intercept]    0.19    0.01  0.48   -0.88   -0.05    0.21    0.47
-r_site[PNW,Intercept]    -0.96    0.01  0.50   -2.09   -1.21   -0.92   -0.66
-r_site[STCK,Intercept]   -0.52    0.01  0.50   -1.64   -0.77   -0.49   -0.23
-lprior                  -15.05    0.01  0.33  -15.74  -15.25  -15.04  -14.84
-lp__                   1022.61    0.05  2.66 1016.55 1021.03 1022.95 1024.53
-                         97.5% n_eff Rhat
-b_Intercept              -4.87  6887    1
-b_FMC_nor                 2.21  7028    1
-b_T_nor                  15.29  7171    1
-sd_site__Intercept        2.31  2143    1
-phi                     125.32  8495    1
-r_site[DRO,Intercept]     1.52  1802    1
-r_site[MLES,Intercept]    1.18  1764    1
-r_site[MLRF,Intercept]    1.10  1764    1
-r_site[PNW,Intercept]    -0.06  1868    1
-r_site[STCK,Intercept]    0.38  1814    1
-lprior                  -14.45  3636    1
-lp__                   1026.88  2438    1
+                          mean se_mean    sd    2.5%     25%     50%     75%   97.5% n_eff Rhat
+b_Intercept             -11.76    0.04  3.53  -18.66  -14.13  -11.80   -9.41   -4.84  7055    1
+b_FMC_nor                 1.70    0.00  0.26    1.19    1.52    1.71    1.88    2.22  6665    1
+b_T_nor                   7.58    0.05  3.89   -0.04    4.98    7.61   10.18   15.20  7425    1
+sd_site__Intercept        0.96    0.01  0.53    0.40    0.61    0.82    1.12    2.37  2080    1
+phi                     103.90    0.12 10.68   83.82   96.45  103.65  110.93  125.60  7737    1
+Intercept                -4.60    0.01  0.51   -5.51   -4.89   -4.64   -4.37   -3.38  1919    1
+r_site[DRO,Intercept]     0.58    0.01  0.51   -0.64    0.34    0.62    0.87    1.50  2000    1
+r_site[MLES,Intercept]    0.25    0.01  0.51   -0.97    0.02    0.29    0.54    1.18  1959    1
+r_site[MLRF,Intercept]    0.17    0.01  0.52   -1.05   -0.07    0.21    0.46    1.09  1945    1
+r_site[PNW,Intercept]    -0.98    0.01  0.53   -2.28   -1.23   -0.93   -0.67   -0.05  2052    1
+r_site[STCK,Intercept]   -0.54    0.01  0.53   -1.79   -0.78   -0.49   -0.24    0.38  1989    1
+lprior                  -15.05    0.01  0.33  -15.75  -15.24  -15.03  -14.83  -14.45  3525    1
+lp__                   1022.59    0.05  2.64 1016.58 1021.06 1022.87 1024.50 1026.83  2323    1
 
-Samples were drawn using NUTS(diag_e) at Wed Nov  8 12:30:28 2023.
+Samples were drawn using NUTS(diag_e) at Thu Apr 11 17:34:10 2024.
 For each parameter, n_eff is a crude measure of effective sample size,
-and Rhat is the potential scale reduction factor on split chains (at
+and Rhat is the potential scale reduction factor on split chains (at 
 convergence, Rhat=1).
 			  
 > p_map(model_2)
-MAP-based p-value
+MAP-based p-value 
 
 Parameter   | p (MAP)
 ---------------------
-(Intercept) |  0.003
+(Intercept) |  0.007 
 FMC_nor     |  < .001
-T_nor       |  0.157
+T_nor       |  0.149 
 
 > bayes_R2(model_2) %>% round(digits = 3)
    Estimate Est.Error  Q2.5 Q97.5
-R2    0.371     0.041 0.288 0.448
+R2     0.37     0.041 0.286 0.448
 
 model_3  = brm(CO2_resp_rate ~ FMC_nor * T_nor + (1|site),data = pine_flux,iter = 5000,family ="beta", 
-              control = list(adapt_delta = 0.96),seed=123)
+               control = list(adapt_delta = 0.98),seed=123)
 > model_3$fit
-Inference for Stan model: 516dc2723972b0b4959c45f1ed5792b7.
-4 chains, each with iter=5000; warmup=2500; thin=1;
+Inference for Stan model: anon_model.
+4 chains, each with iter=5000; warmup=2500; thin=1; 
 post-warmup draws per chain=2500, total post-warmup draws=10000.
 
-                          mean se_mean    sd    2.5%     25%     50%     75%
-b_Intercept               2.26    0.08  5.06   -7.52   -1.20    2.25    5.76
-b_FMC_nor               -56.00    0.24 14.64  -84.17  -66.21  -56.13  -46.10
-b_T_nor                  -8.15    0.09  5.68  -19.08  -12.06   -8.17   -4.27
-b_FMC_nor:T_nor          65.45    0.27 16.58   32.91   54.20   65.58   77.00
-sd_site__Intercept        0.79    0.01  0.47    0.30    0.50    0.67    0.93
-phi                     108.50    0.13 10.89   87.96  101.08  108.13  115.63
-r_site[DRO,Intercept]     0.40    0.01  0.43   -0.49    0.20    0.42    0.63
-r_site[MLES,Intercept]    0.28    0.01  0.43   -0.62    0.09    0.30    0.51
-r_site[MLRF,Intercept]    0.17    0.01  0.42   -0.74   -0.02    0.19    0.39
-r_site[PNW,Intercept]    -0.76    0.01  0.45   -1.74   -0.98   -0.72   -0.49
-r_site[STCK,Intercept]   -0.49    0.01  0.44   -1.45   -0.69   -0.45   -0.24
-lprior                  -15.11    0.00  0.30  -15.73  -15.30  -15.10  -14.91
-lp__                   1029.28    0.06  2.86 1022.72 1027.60 1029.64 1031.34
-                         97.5% n_eff Rhat
-b_Intercept              12.05  4116    1
-b_FMC_nor               -27.31  3679    1
-b_T_nor                   2.78  4096    1
-b_FMC_nor:T_nor          97.29  3679    1
-sd_site__Intercept        2.05  1976    1
-phi                     131.15  7043    1
-r_site[DRO,Intercept]     1.19  2323    1
-r_site[MLES,Intercept]    1.06  2224    1
-r_site[MLRF,Intercept]    0.94  2245    1
-r_site[PNW,Intercept]    -0.01  2294    1
-r_site[STCK,Intercept]    0.28  2274    1
-lprior                  -14.56  4111    1
-lp__                   1033.76  2165    1
+                          mean se_mean    sd    2.5%     25%     50%     75%   97.5% n_eff Rhat
+b_Intercept               2.34    0.08  5.08   -7.47   -1.12    2.38    5.79   12.35  4456    1
+b_FMC_nor               -56.30    0.23 14.59  -84.22  -66.24  -56.35  -46.60  -27.06  4040    1
+b_T_nor                  -8.19    0.08  5.66  -19.37  -11.99   -8.26   -4.27    2.73  4465    1
+b_FMC_nor:T_nor          65.39    0.26 16.42   32.53   54.53   65.48   76.59   96.78  4045    1
+sd_site__Intercept        0.79    0.01  0.45    0.30    0.50    0.66    0.93    2.01  1808    1
+phi                     108.70    0.13 10.83   88.47  101.25  108.41  115.80  130.99  6561    1
+Intercept                -4.64    0.01  0.44   -5.40   -4.87   -4.66   -4.44   -3.65  1964    1
+r_site[DRO,Intercept]     0.41    0.01  0.44   -0.56    0.20    0.43    0.65    1.20  2039    1
+r_site[MLES,Intercept]    0.29    0.01  0.44   -0.70    0.09    0.31    0.52    1.07  1988    1
+r_site[MLRF,Intercept]    0.17    0.01  0.44   -0.82   -0.03    0.19    0.41    0.95  1991    1
+r_site[PNW,Intercept]    -0.75    0.01  0.46   -1.82   -0.96   -0.70   -0.49    0.00  2068    1
+r_site[STCK,Intercept]   -0.49    0.01  0.45   -1.54   -0.69   -0.45   -0.23    0.29  2022    1
+lprior                  -15.12    0.01  0.31  -15.76  -15.31  -15.11  -14.92  -14.56  3705    1
+lp__                   1029.27    0.06  2.87 1022.56 1027.64 1029.62 1031.33 1033.81  2335    1
 
-Samples were drawn using NUTS(diag_e) at Wed Nov  8 13:00:46 2023.
+Samples were drawn using NUTS(diag_e) at Thu Apr 11 18:09:40 2024.
 For each parameter, n_eff is a crude measure of effective sample size,
-and Rhat is the potential scale reduction factor on split chains (at
+and Rhat is the potential scale reduction factor on split chains (at 
 convergence, Rhat=1).
 
 > p_map(model_3)
-MAP-based p-value
+MAP-based p-value 
 
 Parameter     | p (MAP)
 -----------------------
-(Intercept)   |  0.892
+(Intercept)   |  0.918 
 FMC_nor       |  < .001
-T_nor         |  0.382
+T_nor         |  0.367 
 FMC_nor:T_nor |  < .001
 
 > bayes_R2(model_3) %>% round(digits = 3)
-   Estimate Est.Error Q2.5 Q97.5
-R2     0.41     0.039 0.33 0.482
+   Estimate Est.Error  Q2.5 Q97.5
+R2    0.412      0.04 0.328 0.484
 
+> # LOO ####
+> loo_comp = loo_compare(loo1,loo2,loo3)
+> print(loo_comp, digits = 2)
+        elpd_diff se_diff
+model_3  0.00      0.00  
+model_2 -6.25      3.27  
+model_1 -7.40      4.09
 
+> # Model weights ####
+> fit1 <- add_criterion(model_1, "loo")
+> fit2 <- add_criterion(model_2, "loo")
+> fit3 <- add_criterion(model_3, "loo")
+> model_weights(fit1,fit2,fit3, weights = "loo")
+        fit1         fit2         fit3 
+0.0006083473 0.0019332763 0.9974583764
 
