@@ -40,23 +40,29 @@ pine_flux <- pine_flux %>%
 
 # Models ####
 
-model_1  = brm(CO2_resp_rate ~ FMC_nor + (1|site),data = pine_flux,iter = 3500,family ="beta",
-               control = list(adapt_delta = 0.96),seed=123)
+model_1  = brm(CO2_resp_rate ~ FMC_nor + (1|site),data = pine_flux,iter = 4200,family ="beta",
+               control = list(adapt_delta = 0.98),seed=123)
 summary(model_1)
 model_1$fit
 loo1 = loo(model_1)
+p_map(model_1)
+bayes_R2(model_1) %>% round(digits = 3)
 
 model_2  = brm(CO2_resp_rate ~ FMC_nor + T_nor + (1|site),data = pine_flux,iter = 5000,family ="beta", 
-               control = list(adapt_delta = 0.96),seed=123)
+               control = list(adapt_delta = 0.98),seed=123)
 summary(model_2)
 model_2$fit
 loo2 = loo(model_2)
+p_map(model_2)
+bayes_R2(model_2) %>% round(digits = 3)
 
 model_3  = brm(CO2_resp_rate ~ FMC_nor * T_nor + (1|site),data = pine_flux,iter = 5000,family ="beta", 
-               control = list(adapt_delta = 0.96),seed=123)
+               control = list(adapt_delta = 0.98),seed=123)
 summary(model_3)
 model_3$fit
 loo3 = loo(model_3)
+p_map(model_3)
+bayes_R2(model_3) %>% round(digits = 3)
 
 library(bayestestR)
 p_map(model_3)
@@ -413,8 +419,6 @@ dev.off()
 conditions <- data.frame(site = unique(pine_flux$site))
 rownames(conditions) <- unique(pine_flux$site)
 me_fit <- conditional_effects(model_3, conditions = conditions,re_formula = NULL, method = "predict")
-
-bayes_R2(model_3) %>% round(digits = 3) 
 
 effects_m <- me_fit[[1]] %>%
   mutate(effect1__ = effect1__*max(pine_flux$FMC))
