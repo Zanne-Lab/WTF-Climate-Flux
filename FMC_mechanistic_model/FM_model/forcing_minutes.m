@@ -32,7 +32,7 @@ end
 
 % fuel_moisture   = data(:,3);        % Fuel moisture (%)
 fuel_moisture   = data(:,2);        % Fuel moisture (%)
-air_temp        = data(:,8);        % Averaged air temperature (°C)
+air_temp        = data(:,8);        % Averaged air temperature (Â°C)
 precip          = data(:,5);        % Precipitation (mm)
 press           = data(:,6);        % Mean air pressure (mb)
 rel_hum         = data(:,7);        % Relative humidity (%)
@@ -172,7 +172,7 @@ p1(10,:)    = H_p;         % Humidity parameter [hPa/K]
 
 %% Incident precipitation rate [kg/(30 min)/m2]
 
-p1(11,:) = precip/1000;
+p1(11,:) = precip;
 
 %% Normalization 
 
