@@ -197,12 +197,15 @@ ax.FontSize = 20;
 
 %% NSE %%
 
-DRO_simulated   = m_s([fuel(:,1)]);
-DRO_mean        = mean(fuel_mean);
-DRO_nse         = 1 - abs(sum((DRO_simulated - fuel_mean).^2))/...
-                  abs(sum((fuel_mean-DRO_mean).^2))
-DRO_nse1        = 1 - abs(sum((DRO_simulated - fuel_mean)))/...
-                  abs(sum((fuel_mean-DRO_mean)));
+DRO_simulated   = m_s([fuel([2:9],1)]);
+DRO_mean        = mean(fuel_mean([2:9]));
+DRO_nse         = 1 - abs(sum((DRO_simulated - fuel_mean([2:9])).^2))/...
+                  abs(sum((fuel_mean([2:9])-DRO_mean).^2))
+DRO_nse1        = 1 - abs(sum((DRO_simulated - fuel_mean([2:9]))))/...
+                  abs(sum((fuel_mean([2:9])-DRO_mean)));
+DRO_bias       = sum(DRO_simulated - fuel_mean([2:9]))/length(DRO_simulated)
+DRO_rmse       = ((sum((DRO_simulated - fuel_mean([2:9])).^2))/length(DRO_simulated)).^0.5
+scatter(fuel_mean([2:9]),DRO_simulated)
 
 %%
 
@@ -210,8 +213,9 @@ MLES_simulated  = m_s([fuel(:,1)]);
 MLES_mean       = mean(fuel_mean);
 MLES_nse        = 1 - abs(sum((MLES_simulated - fuel_mean).^2))/...
                   abs(sum((fuel_mean-MLES_mean).^2))
-MLES_nse1       = 1 - abs(sum((MLES_simulated - fuel_mean)))/...
-                  abs(sum((fuel_mean-MLES_mean)));
+MLES_bias       = sum(MLES_simulated - fuel_mean)/length(MLES_simulated)
+MLES_rmse       = ((sum((MLES_simulated - fuel_mean).^2))/length(MLES_simulated)).^0.5
+scatter(fuel_mean,MLES_simulated)
 
 %%
 
@@ -219,22 +223,27 @@ MLRF_simulated  = m_s([fuel(:,1)]);
 MLRF_mean       = mean(fuel_mean);
 MLRF_nse        = 1 - abs(sum((MLRF_simulated - fuel_mean).^2))/...
                   abs(sum((fuel_mean-MLRF_mean).^2))
-MLRF_nse1       = 1 - abs(sum((MLRF_simulated - fuel_mean)))/...
-                  abs(sum((fuel_mean-MLRF_mean)));
+MLRF_bias       = sum(MLRF_simulated - fuel_mean)/length(MLRF_simulated)
+MLRF_rmse       = ((sum((MLRF_simulated - fuel_mean).^2))/length(MLRF_simulated)).^0.5
+scatter(fuel_mean,MLRF_simulated)
+
 %%
 v=10;
 PNW_simulated   = m_s([fuel(1:v,1)]);
 PNW_mean        = mean(fuel_mean(1:v,1));
 PNW_nse         = 1 - (sum(abs(PNW_simulated - fuel_mean(1:v,1)).^2))/...
                   (sum(abs(fuel_mean(1:v,1)-PNW_mean).^2))
-PNW_nse1        = 1 - (sum(abs(PNW_simulated - fuel_mean(1:v,1))))/...
-                  (sum(abs(fuel_mean(1:v,1)-PNW_mean)))
+PNW_bias       = sum(PNW_simulated - fuel_mean)/length(PNW_simulated)
+PNW_rmse       = ((sum((PNW_simulated - fuel_mean).^2))/length(PNW_simulated)).^0.5
+scatter(fuel_mean,PNW_simulated)
+
 %%
 
 STCK_simulated  = m_s([fuel(:,1)]);
 STCK_mean       = mean(fuel_mean);
 STCK_nse        = 1 - (sum(abs(STCK_simulated - fuel_mean).^2))/...
                   (sum(abs(fuel_mean-STCK_mean).^2))
-STCK_nse1        = 1 - (sum(abs(STCK_simulated - fuel_mean)))/...
-                  (sum(abs(fuel_mean-STCK_mean)));
+STCK_bias       = sum(STCK_simulated - fuel_mean)/length(STCK_simulated)
+STCK_rmse       = ((sum((STCK_simulated - fuel_mean).^2))/length(STCK_simulated)).^0.5
+scatter(fuel_mean,STCK_simulated)
 %%
