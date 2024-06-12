@@ -56,11 +56,11 @@
         }
     ],
     "license": "MIT",
-    "title": “Data and code from: Climate-based prediction of carbon fluxes from deadwood in Australia”,
+    "title": "Data and code from: Climate-based prediction of carbon fluxes from deadwood in Australia",
     "upload_type": "dataset",
     "communities": [
         {"identifier": "wtf-project"}
     ],
     "keywords": ["climate", "deadwood", "tropical", "carbonflux", "Australia"],
-    "description": "This repository contains the code for the publication "Climate-based prediction of carbon fluxes from deadwood in Australia"."
+    "description": "This repository contains the code for the publication 'Climate-based prediction of carbon fluxes from deadwood in Australia'."
 }
