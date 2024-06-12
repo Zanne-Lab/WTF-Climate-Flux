@@ -17,7 +17,7 @@
         },
   {
             "orcid": "0000-0001-7895-083X",
-            "affiliation": "School of Biological, Earth and Environmental Sciences, University of New South Wales, Sydney, NSW, Australia; Department of Biology, University of Miami, Miami, FL, USA”,
+            "affiliation": "School of Biological Earth and Environmental Sciences, University of New South Wales, Sydney, NSW, Australia; Department of Biology, University of Miami, Miami, FL, USA”,
             "name": "Wijas, Baptiste"
         },
         {
@@ -42,7 +42,7 @@
         },
 {
             "affiliation": "The Soil Biodiversity Group, Entomology Department, The Natural History Museum, London, UK",
-            "name": “Eggleton, Paul."
+            "name": “Eggleton, Paul"
         },
         {
             "orcid": "0000-0001-6379-9452",
@@ -62,5 +62,5 @@
         {"identifier": "wtf-project"}
     ],
     "keywords": ["climate", "deadwood", "tropical", “carbonflux”, “Australia”],
-    "description": "This repository contains the data and code associated with the manuscript “Climate-based prediction of carbon fluxes from deadwood in Australia”.”
+    "description": "This repository contains the code for the publication "Climate-based prediction of carbon fluxes from deadwood in Australia". ”
 }
